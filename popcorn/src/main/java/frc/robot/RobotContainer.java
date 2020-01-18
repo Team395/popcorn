@@ -25,6 +25,10 @@ public class RobotContainer {
 
   private final ColorMatch m_colorMatch = new ColorMatch(m_colorSensor);
 
+  public static final int driveLeftLeaderMapID = 1;
+  public static final int driveLeftFollowerMapID = 2;
+  public static final int driveRightLeaderMapID = 3;
+  public static final int driveRightFollowerMapID = 4;
 
 
   /**
