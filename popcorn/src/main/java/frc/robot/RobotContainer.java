@@ -8,7 +8,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.Joystick;
+// import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ColorMatch;
 import frc.robot.commands.TankDrive;
 import frc.robot.subsystems.ColorSensor;
@@ -28,9 +29,14 @@ public class RobotContainer {
   private final ColorMatch m_colorMatch = new ColorMatch(m_colorSensor);
 
   private final Drivetrain m_drivetrain = new Drivetrain();
-  private final TankDrive m_tankDrive = new TankDrive(m_drivetrain);
+  private final TankDrive m_tankDrive = new TankDrive(m_drivetrain, this);
 
+  Joystick leftJoystick = new Joystick(3);
+  Joystick rightJoystick = new Joystick(4);
+  // XboxController xboxController = new XboxController(2);
 
+  static final double joystickDeadzone = 0.1;
+  // static final double xboxDeadzone = 0.25;
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -42,6 +48,21 @@ public class RobotContainer {
     m_drivetrain.setDefaultCommand(m_tankDrive);
   }
 
+  private double getJoyY(Joystick stick) {
+    if(Math.abs(stick.getY()) < joystickDeadzone) {
+        return 0;
+    }
+
+    return -stick.getY();     
+}
+
+  public double getLeftY() {
+    return getJoyY(leftJoystick);
+}
+
+  public double getRightY() {
+    return getJoyY(rightJoystick);
+}
   /**
    * Use this method to define your button->command mappings.  Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
