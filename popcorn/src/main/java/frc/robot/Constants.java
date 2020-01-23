@@ -21,4 +21,8 @@ public final class Constants {
     public static final int driveLeftFollowerSparkID = 3;
     public static final int driveRightLeaderSparkID = 1;
     public static final int driveRightFollowerSparkID = 4;
+
+    // public static final int shooterLeaderTalonID = 5;
+    // public static final int shooterFollowerTalonID = 6;
+
 }
