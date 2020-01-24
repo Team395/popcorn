@@ -19,7 +19,9 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -40,6 +42,7 @@ public class RobotContainer {
 
   Joystick leftJoystick = new Joystick(3);
   Joystick rightJoystick = new Joystick(4);
+  JoystickButton leftJoystickTrigger = new JoystickButton(leftJoystick, 1);
   // XboxController xboxController = new XboxController(2);
 
   static final double joystickDeadzone = 0.1;
@@ -78,7 +81,11 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     m_shooter.setDefaultCommand(
-      new RunCommand(() -> m_shooter.periodic(), m_shooter));
+      new RunCommand(() -> m_shooter.stop(), m_shooter));
+
+      leftJoystickTrigger
+        .whenHeld(new RunCommand(() -> m_shooter.set(4000), m_shooter))
+        .whenReleased(new RunCommand(() -> m_shooter.stop(), m_shooter));
   }
 
 
