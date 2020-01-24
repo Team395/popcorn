@@ -50,6 +50,8 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     // Color detectedColor = m_colorSensor.getColor();
 
+    m_robotContainer.periodic();
+
   }
 
   /**

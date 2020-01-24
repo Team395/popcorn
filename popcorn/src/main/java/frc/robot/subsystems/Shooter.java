@@ -17,6 +17,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -31,12 +32,19 @@ public class Shooter extends SubsystemBase {
   
 
   public Shooter() {
-    shooterMotor.setInverted(false);
+    shooterMotor.setInverted(true);
     shooterMotor.setIdleMode(IdleMode.kCoast);
     encoder = shooterMotor.getEncoder();
     controller = shooterMotor.getPIDController();
     controller.setFeedbackDevice(encoder);
     stop();
+
+    SmartDashboard.putNumber("desiredSetpoint", 3000);
+    SmartDashboard.putNumber("setP", 0.0005);
+    SmartDashboard.putNumber("setI", 0);
+    SmartDashboard.putNumber("setD", 4);
+    SmartDashboard.putNumber("setF", 0.00019);
+
     updateConstants();
 
 
@@ -46,25 +54,42 @@ public class Shooter extends SubsystemBase {
     // talonFollower.follow(talonLeader);
   }
 
+  public void update() {
+    SmartDashboard.putNumber("velocity", encoder.getVelocity());
+    updateConstants();
+  }
+
   public void set(double setpoint) {
+    setpoint = SmartDashboard.getNumber("desiredSetpoint", 1000);
     controller.setReference(setpoint, ControlType.kVelocity);
+    SmartDashboard.putNumber("setpoint", setpoint);
   }
 
   public void stop() {
     controller.setReference(0, ControlType.kDutyCycle);
   }
 
-  public double shooterP = 0.0011;
+  public double shooterP = 0.0001;
   public double shooterI = 0;
-  public double shooterD = 4;
+  public double shooterD = 2;
   public double shooterF = 0.00017;
 
   public void updateConstants() {
-    controller.setOutputRange(-1, 0);
+    shooterP = SmartDashboard.getNumber("setP", 0.0001);
+    shooterI = SmartDashboard.getNumber("setI", 0);
+    shooterD = SmartDashboard.getNumber("setD", 2);
+    shooterF = SmartDashboard.getNumber("setF", 0.00017);
+
+    controller.setOutputRange(0, 1);
     controller.setP(shooterP);
     controller.setI(shooterI);
     controller.setD(shooterD);
     controller.setFF(shooterF);
+
+    SmartDashboard.putNumber("kP", shooterP);
+    SmartDashboard.putNumber("kI", shooterI);
+    SmartDashboard.putNumber("kD", shooterD);
+    SmartDashboard.putNumber("kF", shooterF);
   }
 
 

@@ -24,6 +24,6 @@ public final class Constants {
 
     // public static final int shooterLeaderTalonID = 5;
     // public static final int shooterFollowerTalonID = 6;
-    public static final int shooterMotorSparkID = 5;
+    public static final int shooterMotorSparkID = 3;
 
 }

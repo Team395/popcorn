@@ -58,6 +58,10 @@ public class RobotContainer {
     // m_drivetrain.setDefaultCommand(m_tankDrive);
   }
 
+  public void periodic() {
+    m_shooter.update();
+  }
+
   private double getJoyY(Joystick stick) {
     if(Math.abs(stick.getY()) < joystickDeadzone) {
         return 0;
