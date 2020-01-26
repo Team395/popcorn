@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,6 +20,10 @@ public class Drivetrain extends SubsystemBase {
         rightLeader.setInverted(false);
         rightFollower.setInverted(false);
 
+        leftLeader.setIdleMode(IdleMode.kBrake);
+        leftFollower.setIdleMode(IdleMode.kBrake);
+        rightLeader.setIdleMode(IdleMode.kBrake);
+        rightFollower.setIdleMode(IdleMode.kBrake);
 
         leftFollower.follow(leftLeader);
         rightFollower.follow(rightLeader);

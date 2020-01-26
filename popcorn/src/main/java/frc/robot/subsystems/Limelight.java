@@ -14,13 +14,14 @@ public class Limelight extends SubsystemBase {
     NetworkTableEntry ty = table.getEntry("ty");
     NetworkTableEntry ts = table.getEntry("ts");
     NetworkTableEntry ta = table.getEntry("ta");
+    int counter = 0;
 
     public Limelight() {
     }
 
     public void update() {
         // read values periodically
-        double v = tx.getDouble(0.0);
+        double v = tv.getDouble(0.0);
         double x = tx.getDouble(0.0);
         double y = ty.getDouble(0.0);
         double skew = ts.getDouble(0.0);
@@ -32,5 +33,7 @@ public class Limelight extends SubsystemBase {
         SmartDashboard.putNumber("LimelightY", y);
         SmartDashboard.putNumber("LimelightSkew", skew);
         SmartDashboard.putNumber("LimelightArea", area);
+        SmartDashboard.putNumber("Counter", counter);
+        counter++;
     }
 }
