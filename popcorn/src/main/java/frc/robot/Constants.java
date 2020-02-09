@@ -32,6 +32,8 @@ public final class Constants {
     public static final int shooterFollowerTalonID = 6;
     public static final int shooterLeaderSparkID = 3;
     public static final int shooterFollowerSparkID = 3;
+
+    public static final int climberSparkID = 8;
   
 
 }
