@@ -36,11 +36,11 @@ public class RobotContainer {
 
   // private final ColorMatch m_colorMatch = new ColorMatch(m_colorSensor);
 
-  private final Drivetrain m_drivetrain = new Drivetrain();
-  private final TankDrive m_tankDrive = new TankDrive(m_drivetrain, this);
+  // private final Drivetrain m_drivetrain = new Drivetrain();
+  // private final TankDrive m_tankDrive = new TankDrive(m_drivetrain, this);
 
   private final Climber m_climber = new Climber();
-  private final Hanger m_hanger = new Hanger(m_climber);
+  // private final Hanger m_hanger = new Hanger(m_climber, this);
 
   // private final Shooter m_shooter = new Shooter();
   //private final FinalShooter m_shooter = new Shooter();
@@ -48,6 +48,8 @@ public class RobotContainer {
   Joystick leftJoystick = new Joystick(3);
   Joystick rightJoystick = new Joystick(4);
   JoystickButton leftJoystickTrigger = new JoystickButton(leftJoystick, 1);
+  JoystickButton leftJoystickThumbButton = new JoystickButton(leftJoystick, 2);
+  
   // XboxController xboxController = new XboxController(2);
 
   static final double joystickDeadzone = 0.1;
@@ -60,8 +62,8 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     // m_colorSensor.setDefaultCommand(m_colorMatch);
-    m_drivetrain.setDefaultCommand(m_tankDrive);
-    m_climber.setDefaultCommand(m_hanger);
+    // m_drivetrain.setDefaultCommand(m_tankDrive);
+    // m_climber.setDefaultCommand(m_hanger);
   }
 
   public void periodic() {
@@ -69,7 +71,7 @@ public class RobotContainer {
   }
 
   public void teleopInit() {
-    m_drivetrain.tankDrive(0.0, 0.0);
+    // m_drivetrain.tankDrive(0.0, 0.0);
   }
 
   private double getJoyY(Joystick stick) {
@@ -100,7 +102,12 @@ public class RobotContainer {
     // leftJoystickTrigger
     //     .whenHeld(new RunCommand(() -> m_shooter.set(4000), m_shooter))
     //     .whenReleased(new RunCommand(() -> m_shooter.stop(), m_shooter));
-  }
+    leftJoystickTrigger
+        .whenPressed(new Hanger(m_climber, this, true));
+  
+    leftJoystickThumbButton
+    .whenPressed(new Hanger(m_climber, this, false));
+  } 
 
 
   /**
