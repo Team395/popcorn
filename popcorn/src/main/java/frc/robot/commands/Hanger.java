@@ -7,7 +7,6 @@
 
 package frc.robot.commands;
 
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.Climber;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -16,8 +15,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
  * An example command that uses an example subsystem.
  */
 public class Hanger extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final RobotContainer m_robotContainer;
   private final Climber m_climber;
   private double encoderPosition = 0.0;
   private double encoderFinalPosition = 0.0;
@@ -30,9 +27,8 @@ public class Hanger extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public Hanger(final Climber climber, final RobotContainer robotContainer, boolean extend) {
+  public Hanger(final Climber climber, boolean extend) {
     m_climber = climber;
-    m_robotContainer = robotContainer;
     m_extend = extend;
     if (extend)
       m_multiplier = 1.0;

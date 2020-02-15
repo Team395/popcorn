@@ -16,11 +16,10 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    // Drivetrain w/ Rev Robotics SparkMAXs/NEOs
-    public static final int driveLeftLeaderSparkID = 2;
-    public static final int driveLeftFollowerSparkID = 3;
-    public static final int driveRightLeaderSparkID = 1;
-    public static final int driveRightFollowerSparkID = 4;
+
+    public static final int kSlotIdx = 0;
+    public static final int kPIDLoopIdx = 0;
+    public static final int kTimeoutMs = 30;
 
     // Drivetrain w/ CTRE Falcon 500s/TalonFXs
     public static final int driveLeftLeaderFalconID = 7;
@@ -28,12 +27,12 @@ public final class Constants {
     public static final int driveRightLeaderFalconID = 5;
     public static final int driveRightFollowerFalconID = 6;
 
-    public static final int shooterLeaderTalonID = 5;
-    public static final int shooterFollowerTalonID = 6;
-    public static final int shooterLeaderSparkID = 3;
-    public static final int shooterFollowerSparkID = 3;
+    // Shooter w/ CTRE Falcon 500s/TalonFXs and Rev Robotics SparkMAX/NEO
+    public static final int flywheelLeaderTalonID = 1;
+    public static final int flywheelFollowerTalonID = 2;
+    public static final int acceleratorSparkID = 3;
 
-    public static final int climberSparkID = 8;
+    public static final int climberSparkID = 4;
   
 
 }
