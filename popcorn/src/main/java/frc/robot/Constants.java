@@ -21,6 +21,22 @@ public final class Constants {
     public static final int kPIDLoopIdx = 0;
     public static final int kTimeoutMs = 30;
 
+    // Constants for accelerator PID
+    public static final double acceleratorP = 0.0001;
+    public static final double acceleratorI = 0;
+    public static final double acceleratorD = 2;
+    public static final double acceleratorF = 0.00017;
+  
+    // Constants for flywheel PID
+    public static final double flywheelP = 0.35;
+    public static final double flywheelI = 0;
+    public static final double flywheelD = 14.5;
+    public static final double flywheelF = 0.046;
+
+    // Setpoint for the shooter
+    public static final int acceleratorSetpoint = 5000;
+    public static final int flywheelSetpoint = 13000;
+
     // Drivetrain w/ CTRE Falcon 500s/TalonFXs
     public static final int driveLeftLeaderFalconID = 7;
     public static final int driveLeftFollowerFalconID = 8;
@@ -33,6 +49,7 @@ public final class Constants {
     public static final int acceleratorSparkID = 3;
 
     public static final int climberSparkID = 4;
+
   
 
 }

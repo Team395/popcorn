@@ -36,8 +36,8 @@ public class RobotContainer {
 
   // private final ColorMatch m_colorMatch = new ColorMatch(m_colorSensor);
 
-  private final Drivetrain m_drivetrain = new Drivetrain();
-  private final TankDrive m_tankDrive = new TankDrive(m_drivetrain, this);
+  // private final Drivetrain m_drivetrain = new Drivetrain();
+  // private final TankDrive m_tankDrive = new TankDrive(m_drivetrain, this);
 
   // private final Climber m_climber = new Climber();
 
@@ -60,12 +60,12 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     // m_colorSensor.setDefaultCommand(m_colorMatch);
-    m_drivetrain.setDefaultCommand(m_tankDrive);
+    // m_drivetrain.setDefaultCommand(m_tankDrive);
     // m_climber.setDefaultCommand(m_hanger);
   }
 
   public void periodic() {
-    // m_shooter.update();
+    m_shooter.update();
   }
 
   public void teleopInit() {
@@ -97,8 +97,12 @@ public class RobotContainer {
     m_shooter.setDefaultCommand(
       new RunCommand(() -> m_shooter.stop(), m_shooter));
 
+    // leftJoystickTrigger
+    //     .whenHeld(new RunCommand(() -> m_shooter.set(4000, 4000), m_shooter))
+    //     .whenReleased(new RunCommand(() -> m_shooter.stop(), m_shooter));
+
     leftJoystickTrigger
-        .whenHeld(new RunCommand(() -> m_shooter.set(4000, 4000), m_shooter))
+        .whenHeld(new RunCommand(() -> m_shooter.set(Constants.acceleratorSetpoint, Constants.flywheelSetpoint), m_shooter))
         .whenReleased(new RunCommand(() -> m_shooter.stop(), m_shooter));
     
     // leftJoystickTrigger
