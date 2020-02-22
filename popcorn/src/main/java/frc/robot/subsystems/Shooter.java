@@ -20,8 +20,11 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.ControlType;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.enums.ShooterHoodPositions;
 
 public class Shooter extends SubsystemBase {
     CANSparkMax acceleratorSparkMax = new CANSparkMax(Constants.acceleratorSparkID, MotorType.kBrushless);
@@ -32,12 +35,28 @@ public class Shooter extends SubsystemBase {
     TalonFX flywheelFollowerTalonFX = new TalonFX(Constants.flywheelFollowerTalonID);
     TalonFXConfiguration configs = new TalonFXConfiguration();
 
+    DoubleSolenoid shooterHoodSolenoid = new DoubleSolenoid(Constants.shooterHoodSolenoidForward
+      , Constants.shooterHoodSolenoidReverse);
+
   public Shooter() {
+    configureAccelerator();
+
+    configureFlywheel();
+  }
+
+  private void configureAccelerator(){
     acceleratorSparkMax.setIdleMode(IdleMode.kCoast);
     acceleratorEncoder = acceleratorSparkMax.getEncoder();
     acceleratorController = acceleratorSparkMax.getPIDController();
     acceleratorController.setFeedbackDevice(acceleratorEncoder);
+    acceleratorController.setOutputRange(0, 1);
+    acceleratorController.setP(Constants.acceleratorP);
+    acceleratorController.setI(Constants.acceleratorI);
+    acceleratorController.setD(Constants.acceleratorD);
+    acceleratorController.setFF(Constants.acceleratorF);
+  }
 
+  private void configureFlywheel(){
     configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
     configs.slot0.kP = Constants.flywheelP;
     configs.slot0.kI = Constants.flywheelI;
@@ -53,25 +72,23 @@ public class Shooter extends SubsystemBase {
     flywheelLeaderTalonFX.setNeutralMode(NeutralMode.Coast);
     
     flywheelFollowerTalonFX.follow(flywheelLeaderTalonFX);
-
-   
-
-    stop();
-
-    acceleratorController.setOutputRange(0, 1);
-    acceleratorController.setP(Constants.acceleratorP);
-    acceleratorController.setI(Constants.acceleratorI);
-    acceleratorController.setD(Constants.acceleratorD);
-    acceleratorController.setFF(Constants.acceleratorF);
   }
 
   public void set(double acceleratorSetpoint, double flywheelSetpoint) {
-
     acceleratorController.setReference(acceleratorSetpoint, ControlType.kVelocity);
-   
     flywheelLeaderTalonFX.set(ControlMode.Velocity, flywheelSetpoint);
-    
   }
+
+  public void moveHood(final ShooterHoodPositions position) {
+    switch(position) {
+        case UP:
+            shooterHoodSolenoid.set(Value.kReverse);
+            break;
+        case DOWN:
+            shooterHoodSolenoid.set(Value.kForward);
+            break;
+    }
+}
 
   public void stop() {
     acceleratorController.setReference(0, ControlType.kDutyCycle);
