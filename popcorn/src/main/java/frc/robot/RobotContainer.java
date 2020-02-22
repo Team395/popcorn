@@ -11,14 +11,19 @@ import java.util.Set;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 // import frc.robot.commands.Hanger;
 // import edu.wpi.first.wpilibj.XboxController;
 // import frc.robot.commands.ColorMatch;
 import frc.robot.commands.TankDrive;
+import frc.robot.commands.intake.IntakePowerCells;
+import frc.robot.commands.intake.StowIntake;
 // import frc.robot.subsystems.Climber;
 // import frc.robot.subsystems.ColorSensor;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Serializer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -43,12 +48,16 @@ public class RobotContainer {
 
   private final Shooter m_shooter = new Shooter();
 
+  private final Intake m_intake = new Intake();
+  private final Serializer m_serializer = new Serializer();
+
   Joystick leftJoystick = new Joystick(3);
   Joystick rightJoystick = new Joystick(4);
   JoystickButton leftJoystickTrigger = new JoystickButton(leftJoystick, 1);
   JoystickButton leftJoystickThumbButton = new JoystickButton(leftJoystick, 2);
   
-  // XboxController xboxController = new XboxController(2);
+  XboxController xboxController = new XboxController(2);
+  JoystickButton xboxAButton = new JoystickButton(xboxController, 2);
 
   static final double joystickDeadzone = 0.1;
   // static final double xboxDeadzone = 0.25;
@@ -109,6 +118,10 @@ public class RobotContainer {
   
     // leftJoystickThumbButton
     // .whenPressed(new Hanger(m_climber, this, false));
+
+    xboxAButton
+      .whenHeld(new IntakePowerCells(m_intake, m_serializer, 0.7, 0.5))
+      .whenReleased(new StowIntake(m_intake, m_serializer));
   } 
 
 
