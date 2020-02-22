@@ -77,5 +77,4 @@ public class Shooter extends SubsystemBase {
     acceleratorController.setReference(0, ControlType.kDutyCycle);
     flywheelLeaderTalonFX.set(ControlMode.PercentOutput, 0);
   }
-
 }
