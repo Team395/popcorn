@@ -47,9 +47,20 @@ public final class Constants {
     public static final int flywheelLeaderTalonID = 1;
     public static final int flywheelFollowerTalonID = 2;
     public static final int acceleratorSparkID = 3;
+    // Shooter Hood
+    public static final int shooterHoodSolenoidForward = 2;
+    public static final int shooterHoodSolenoidReverse = 3;
 
     public static final int climberSparkID = 4;
 
-  
+    // Intake
+    public static final int intakeRollerTalonId = 9;
+    public static final int omniBarTalonId = 10;
+    ////Intake Solenoids
+    public static final int intakeSolenoidLeftForward = 0;
+    public static final int intakeSolenoidLeftReverse = 1;
 
+    // Serializer
+    public static final int serializerLeaderSparkMaxId = 11;
+    public static final int serializerFollowerSparkMaxId = 12;
 }
