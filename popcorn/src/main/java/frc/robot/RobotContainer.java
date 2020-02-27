@@ -49,13 +49,13 @@ public class RobotContainer {
   // private final Drivetrain m_drivetrain = new Drivetrain();
   // private final TankDrive m_tankDrive = new TankDrive(m_drivetrain, this);
 
-  public final Climber m_climber = new Climber();
+  // public final Climber m_climber = new Climber();
   // private final Hanger m_hanger = new Hanger(m_climber, extend);
 
   // private final Shooter m_shooter = new Shooter();
 
   // private final Intake m_intake = new Intake();
-  // private final Serializer m_serializer = new Serializer();
+  private final Serializer m_serializer = new Serializer();
 
   Joystick leftJoystick = new Joystick(3);
   Joystick rightJoystick = new Joystick(4);
@@ -86,13 +86,16 @@ public class RobotContainer {
   public void teleopPeriodic() {
     // For testing purposes only:
     // m_serializer.set(testSerializerSpeed);
+    m_serializer.setSerializerAndOmnibar(
+      direction * -1 * testSerializerSpeed,
+      direction * testOmnibarSpeed);
   }
 
   public void teleopInit() {
     // m_drivetrain.tankDrive(0.0, 0.0);
-    SmartDashboard
-      .putNumber("EncoderStart"
-        , m_climber.getEncoderPosition());
+    // SmartDashboard
+    //   .putNumber("EncoderStart"
+    //     , m_climber.getEncoderPosition());
   }
 
   private double getJoyY(Joystick stick) {
@@ -117,12 +120,27 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   @Log
+  public int direction = 1;
+  @Config
+  public void setDirection(int value) {
+    direction = value;
+  }
+  @Log
   public double testSerializerSpeed = 0.1;
 
   @Config
   public void setTestSerializerSpeed(double value) {
     testSerializerSpeed = value;
   }
+
+  @Log
+  public double testOmnibarSpeed = 0.1;
+
+  @Config
+  public void setTestOmnibrSpeed(double value) {
+    testOmnibarSpeed = value;
+  }
+
   private void configureButtonBindings() {
     // m_shooter.setDefaultCommand(
     //   new RunCommand(() -> m_shooter.stop(), m_shooter));
@@ -135,15 +153,15 @@ public class RobotContainer {
     //     .whenHeld(new RunCommand(() -> m_shooter.set(Constants.acceleratorSetpoint, Constants.flywheelSetpoint), m_shooter))
     //     .whenReleased(new RunCommand(() -> m_shooter.stop(), m_shooter));
     
-    leftJoystickTrigger
-        .whenHeld(new Climb(m_climber, true));
-        // .whenReleased(new RunCommand(() -> m_climber.stop()));
+    // leftJoystickTrigger
+    //     .whenHeld(new Climb(m_climber, true));
   
-    leftJoystickThumbButton
-      .whenHeld(new Climb(m_climber, false));
-      //.whenReleased(new RunCommand(() -> m_climber.stop()));
-    leftJoystickButtonFour
-      .whenPressed(new ClimbToSetpoint(m_climber), false);
+    // leftJoystickThumbButton
+    //   .whenHeld(new Climb(m_climber, false));
+
+    // leftJoystickButtonFour
+    //   .whenPressed(new ClimbToSetpoint(m_climber), false);
+    
     // xboxAButton
     //   .whenHeld(new IntakePowerCells(m_intake, m_serializer, Constants.intakeSpeed, Constants.serializerSpeed))
     //   .whenReleased(new StowIntake(m_intake, m_serializer));

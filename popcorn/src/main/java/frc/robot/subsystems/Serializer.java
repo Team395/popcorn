@@ -22,6 +22,7 @@ import frc.robot.Constants;
 public class Serializer extends SubsystemBase {
     private final CANSparkMax serializerLeader = new CANSparkMax(Constants.serializerLeaderSparkMaxId, MotorType.kBrushless);
     private final CANSparkMax serializerFollower = new CANSparkMax(Constants.serializerFollowerSparkMaxId, MotorType.kBrushless);
+    private final TalonSRX omniBar = new TalonSRX(7);
 
 
     public Serializer() {
@@ -30,6 +31,8 @@ public class Serializer extends SubsystemBase {
 
         serializerFollower.setInverted(true);
         //serializerFollower.follow(serializerLeader);
+
+        omniBar.setNeutralMode(NeutralMode.Brake);
     }
 
     @Override
@@ -40,5 +43,12 @@ public class Serializer extends SubsystemBase {
     public void set(final double speed){
         serializerLeader.set(speed);
         serializerFollower.set(speed);
+    }
+
+    public void setSerializerAndOmnibar(
+        final double serializerSpeed,
+        final double omniBarSpeed){
+            set(serializerSpeed);
+            omniBar.set(ControlMode.PercentOutput, omniBarSpeed);
     }
 }
