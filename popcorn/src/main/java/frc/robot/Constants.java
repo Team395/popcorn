@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import io.github.oblarg.oblog.annotations.Config;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants.  This class should not be used for any other purpose.  All constants should be
@@ -51,16 +53,21 @@ public final class Constants {
     public static final int shooterHoodSolenoidForward = 2;
     public static final int shooterHoodSolenoidReverse = 3;
 
-    public static final int climberSparkID = 4;
+    //climber
+    public static final int climberSparkID = 3;
 
     // Intake
     public static final int intakeRollerTalonId = 9;
     public static final int omniBarTalonId = 10;
-    ////Intake Solenoids
+    // Intake Solenoids
     public static final int intakeSolenoidLeftForward = 0;
     public static final int intakeSolenoidLeftReverse = 1;
+    @Config
+    public static double intakeSpeed = 0.7;
 
     // Serializer
     public static final int serializerLeaderSparkMaxId = 11;
     public static final int serializerFollowerSparkMaxId = 12;
+    @Config
+    public static double serializerSpeed = 0.5;
 }

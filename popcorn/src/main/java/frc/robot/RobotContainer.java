@@ -12,19 +12,24 @@ import java.util.Set;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-// import frc.robot.commands.Hanger;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.Climb;
+import frc.robot.commands.ClimbToSetpoint;
 // import edu.wpi.first.wpilibj.XboxController;
 // import frc.robot.commands.ColorMatch;
 import frc.robot.commands.TankDrive;
 import frc.robot.commands.intake.IntakePowerCells;
 import frc.robot.commands.intake.StowIntake;
-// import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Climber;
 // import frc.robot.subsystems.ColorSensor;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shooter;
+import io.github.oblarg.oblog.annotations.Config;
+import io.github.oblarg.oblog.annotations.Log;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Serializer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -44,17 +49,19 @@ public class RobotContainer {
   // private final Drivetrain m_drivetrain = new Drivetrain();
   // private final TankDrive m_tankDrive = new TankDrive(m_drivetrain, this);
 
-  // private final Climber m_climber = new Climber();
+  public final Climber m_climber = new Climber();
+  // private final Hanger m_hanger = new Hanger(m_climber, extend);
 
-  private final Shooter m_shooter = new Shooter();
+  // private final Shooter m_shooter = new Shooter();
 
-  private final Intake m_intake = new Intake();
-  private final Serializer m_serializer = new Serializer();
+  // private final Intake m_intake = new Intake();
+  // private final Serializer m_serializer = new Serializer();
 
   Joystick leftJoystick = new Joystick(3);
   Joystick rightJoystick = new Joystick(4);
   JoystickButton leftJoystickTrigger = new JoystickButton(leftJoystick, 1);
   JoystickButton leftJoystickThumbButton = new JoystickButton(leftJoystick, 2);
+  JoystickButton leftJoystickButtonFour = new JoystickButton(leftJoystick, 4);
   
   XboxController xboxController = new XboxController(2);
   JoystickButton xboxAButton = new JoystickButton(xboxController, 2);
@@ -76,8 +83,16 @@ public class RobotContainer {
   public void periodic() {
   }
 
+  public void teleopPeriodic() {
+    // For testing purposes only:
+    // m_serializer.set(testSerializerSpeed);
+  }
+
   public void teleopInit() {
     // m_drivetrain.tankDrive(0.0, 0.0);
+    SmartDashboard
+      .putNumber("EncoderStart"
+        , m_climber.getEncoderPosition());
   }
 
   private double getJoyY(Joystick stick) {
@@ -101,27 +116,37 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
+  @Log
+  public double testSerializerSpeed = 0.1;
+
+  @Config
+  public void setTestSerializerSpeed(double value) {
+    testSerializerSpeed = value;
+  }
   private void configureButtonBindings() {
-    m_shooter.setDefaultCommand(
-      new RunCommand(() -> m_shooter.stop(), m_shooter));
+    // m_shooter.setDefaultCommand(
+    //   new RunCommand(() -> m_shooter.stop(), m_shooter));
 
     // leftJoystickTrigger
     //     .whenHeld(new RunCommand(() -> m_shooter.set(4000, 4000), m_shooter))
     //     .whenReleased(new RunCommand(() -> m_shooter.stop(), m_shooter));
 
-    leftJoystickTrigger
-        .whenHeld(new RunCommand(() -> m_shooter.set(Constants.acceleratorSetpoint, Constants.flywheelSetpoint), m_shooter))
-        .whenReleased(new RunCommand(() -> m_shooter.stop(), m_shooter));
-    
     // leftJoystickTrigger
-    //     .whenPressed(new Hanger(m_climber, this, true));
+    //     .whenHeld(new RunCommand(() -> m_shooter.set(Constants.acceleratorSetpoint, Constants.flywheelSetpoint), m_shooter))
+    //     .whenReleased(new RunCommand(() -> m_shooter.stop(), m_shooter));
+    
+    leftJoystickTrigger
+        .whenHeld(new Climb(m_climber, true));
+        // .whenReleased(new RunCommand(() -> m_climber.stop()));
   
-    // leftJoystickThumbButton
-    // .whenPressed(new Hanger(m_climber, this, false));
-
-    xboxAButton
-      .whenHeld(new IntakePowerCells(m_intake, m_serializer, 0.7, 0.5))
-      .whenReleased(new StowIntake(m_intake, m_serializer));
+    leftJoystickThumbButton
+      .whenHeld(new Climb(m_climber, false));
+      //.whenReleased(new RunCommand(() -> m_climber.stop()));
+    leftJoystickButtonFour
+      .whenPressed(new ClimbToSetpoint(m_climber), false);
+    // xboxAButton
+    //   .whenHeld(new IntakePowerCells(m_intake, m_serializer, Constants.intakeSpeed, Constants.serializerSpeed))
+    //   .whenReleased(new StowIntake(m_intake, m_serializer));
   } 
 
 

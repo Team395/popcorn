@@ -11,21 +11,25 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Serializer extends SubsystemBase {
-    private final TalonSRX serializerLeader = new TalonSRX(Constants.serializerLeaderSparkMaxId);
-    private final TalonSRX serializerFollower = new TalonSRX(Constants.serializerFollowerSparkMaxId);
+    private final CANSparkMax serializerLeader = new CANSparkMax(Constants.serializerLeaderSparkMaxId, MotorType.kBrushless);
+    private final CANSparkMax serializerFollower = new CANSparkMax(Constants.serializerFollowerSparkMaxId, MotorType.kBrushless);
 
 
     public Serializer() {
-        serializerLeader.setNeutralMode(NeutralMode.Brake);
-        serializerFollower.setNeutralMode(NeutralMode.Brake);
+        serializerLeader.setIdleMode(IdleMode.kBrake);
+        serializerFollower.setIdleMode(IdleMode.kBrake);
 
-        serializerFollower.setInverted(InvertType.OpposeMaster);
-        serializerFollower.follow(serializerLeader);
+        serializerFollower.setInverted(true);
+        //serializerFollower.follow(serializerLeader);
     }
 
     @Override
@@ -34,6 +38,7 @@ public class Serializer extends SubsystemBase {
     }
 
     public void set(final double speed){
-        serializerLeader.set(ControlMode.PercentOutput, speed);
+        serializerLeader.set(speed);
+        serializerFollower.set(speed);
     }
 }
