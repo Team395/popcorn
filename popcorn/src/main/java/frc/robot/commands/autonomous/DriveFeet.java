@@ -5,7 +5,7 @@
 // /* the project.                                                               */
 // /*----------------------------------------------------------------------------*/
 
-// package frc.robot.commands;
+// package frc.robot.commands.autonomous;
 
 // import frc.robot.subsystems.Drivetrain;
 // import frc.robot.subsystems.ExampleSubsystem;
@@ -14,11 +14,8 @@
 // /**
 //  * An example command that uses an example subsystem.
 //  */
-// public class DriveFeet extends CommandBase {
-//   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-
-//   private final static double distance;
-
+// public class DriveFeet extends CommandBase {    
+//     private final double distance;
 //     private final Drivetrain m_drivetrain;
 
 //     // private final ExampleSubsystem m_subsystem;
@@ -30,7 +27,7 @@
 //      */
 
 
-//     public DriveFeet(Drivetrain drivetrain) {
+//     public DriveFeet(final Drivetrain drivetrain) {
 
 //         m_drivetain = drivetrain;
 //         // m_subsystem = subsystem;
@@ -38,7 +35,7 @@
 //         addRequirements(drivetrain);
 //     }
 
-//     public DriveFeet(double distance2, boolean b) {
+//     public DriveFeet(final double distance2, final boolean b) {
 //         this(distance, true);
 //     }
 
@@ -54,7 +51,7 @@
 
 //   // Called once the command ends or is interrupted.
 //   @Override
-//   public void end(boolean interrupted) {
+//   public void end(final boolean interrupted) {
 //   }
 
 //   // Returns true when the command should end.
