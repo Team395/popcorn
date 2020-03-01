@@ -19,7 +19,7 @@ import frc.robot.enums.IntakePositions;
 
 public class Intake extends SubsystemBase {
     private final TalonSRX intakeRoller = new TalonSRX(Constants.intakeRollerTalonId);
-    private final TalonSRX omniBar = new TalonSRX(Constants.omniBarTalonId);
+    // private final TalonSRX omniBar = new TalonSRX(Constants.omniBarTalonId);
     
     private final DoubleSolenoid intakeSolenoid =
         new DoubleSolenoid(Constants.intakeSolenoidLeftForward
@@ -27,7 +27,7 @@ public class Intake extends SubsystemBase {
 
     public Intake() {
         intakeRoller.setNeutralMode(NeutralMode.Brake);
-        omniBar.setNeutralMode(NeutralMode.Brake);
+        // omniBar.setNeutralMode(NeutralMode.Brake);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class Intake extends SubsystemBase {
 
     public void set(final double speed){
         intakeRoller.set(ControlMode.PercentOutput, speed);
-        omniBar.set(ControlMode.PercentOutput, speed);
+        // omniBar.set(ControlMode.PercentOutput, speed);
     }
 
     public void moveIntake(final IntakePositions position) {

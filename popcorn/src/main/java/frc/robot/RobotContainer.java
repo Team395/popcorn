@@ -54,7 +54,7 @@ public class RobotContainer {
 
   // private final Shooter m_shooter = new Shooter();
 
-  // private final Intake m_intake = new Intake();
+  private final Intake m_intake = new Intake();
   private final Serializer m_serializer = new Serializer();
 
   Joystick leftJoystick = new Joystick(3);
@@ -89,6 +89,8 @@ public class RobotContainer {
     m_serializer.setSerializerAndOmnibar(
       direction * -1 * testSerializerSpeed,
       direction * testOmnibarSpeed);
+
+    m_intake.set(direction * testIntakeSpeed);
   }
 
   public void teleopInit() {
@@ -131,6 +133,14 @@ public class RobotContainer {
   @Config
   public void setTestSerializerSpeed(double value) {
     testSerializerSpeed = value;
+  }
+
+  @Log
+  public double testIntakeSpeed = 0.1;
+
+  @Config
+  public void setTestIntakeSpeed(double value) {
+    testIntakeSpeed = value;
   }
 
   @Log
