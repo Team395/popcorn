@@ -28,7 +28,8 @@ public class TankDrive extends CommandBase {
      public void execute() {
        SmartDashboard.putNumber("leftY", m_robotContainer.getLeftY());
        SmartDashboard.putNumber("rightY", m_robotContainer.getRightY());
-        m_drivetrain.tankDrive(m_robotContainer.getLeftY(), m_robotContainer.getRightY());
+        m_drivetrain.tankDrive(m_robotContainer.getLeftY()
+          , m_robotContainer.getRightY());
      }
    
      // Called once the command ends or is interrupted.
