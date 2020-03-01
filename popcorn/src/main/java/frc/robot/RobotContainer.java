@@ -46,27 +46,32 @@ public class RobotContainer {
 
   // private final ColorMatch m_colorMatch = new ColorMatch(m_colorSensor);
 
-  // private final Drivetrain m_drivetrain = new Drivetrain();
-  // private final TankDrive m_tankDrive = new TankDrive(m_drivetrain, this);
+  private final Drivetrain m_drivetrain = new Drivetrain();
+  private final TankDrive m_tankDrive = new TankDrive(m_drivetrain, this);
 
-  // public final Climber m_climber = new Climber();
+  public final Climber m_climber = new Climber();
   // private final Hanger m_hanger = new Hanger(m_climber, extend);
 
-  // private final Shooter m_shooter = new Shooter();
+  private final Shooter m_shooter = new Shooter();
 
   private final Intake m_intake = new Intake();
   private final Serializer m_serializer = new Serializer();
 
   Joystick leftJoystick = new Joystick(3);
   Joystick rightJoystick = new Joystick(4);
+  
   JoystickButton leftJoystickTrigger = new JoystickButton(leftJoystick, 1);
   JoystickButton leftJoystickThumbButton = new JoystickButton(leftJoystick, 2);
   JoystickButton leftJoystickButtonFour = new JoystickButton(leftJoystick, 4);
-  
-  XboxController xboxController = new XboxController(2);
-  JoystickButton xboxAButton = new JoystickButton(xboxController, 2);
 
-  static final double joystickDeadzone = 0.1;
+  JoystickButton rightJoystickTrigger = new JoystickButton(rightJoystick, 1);
+  JoystickButton rightJoystickThumbButton = new JoystickButton(rightJoystick, 2);
+  JoystickButton rightJoystickButtonFour = new JoystickButton(rightJoystick, 4);
+  
+  // XboxController xboxController = new XboxController(2);
+  // JoystickButton xboxAButton = new JoystickButton(xboxController, 2);
+
+  static final double joystickDeadzone = 0.15;
   // static final double xboxDeadzone = 0.25;
 
   /**
@@ -76,7 +81,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     // m_colorSensor.setDefaultCommand(m_colorMatch);
-    // m_drivetrain.setDefaultCommand(m_tankDrive);
+    m_drivetrain.setDefaultCommand(m_tankDrive);
     // m_climber.setDefaultCommand(m_hanger);
   }
 
@@ -84,13 +89,6 @@ public class RobotContainer {
   }
 
   public void teleopPeriodic() {
-    // For testing purposes only:
-    // m_serializer.set(testSerializerSpeed);
-    m_serializer.setSerializerAndOmnibar(
-      direction * -1 * testSerializerSpeed,
-      direction * testOmnibarSpeed);
-
-    m_intake.set(direction * testIntakeSpeed);
   }
 
   public void teleopInit() {
@@ -144,33 +142,67 @@ public class RobotContainer {
   }
 
   @Log
-  public double testOmnibarSpeed = 0.1;
+  public double testAcceleratorSpeed = 0;
 
   @Config
-  public void setTestOmnibrSpeed(double value) {
-    testOmnibarSpeed = value;
+  public void setTestAcceleratorSpeed(double value) {
+    testAcceleratorSpeed = value;
+  }
+
+  @Log
+  public double testFlywheelSpeed = 0;
+
+  @Config
+  public void setTestFlywheelSpeed(double value) {
+    testFlywheelSpeed = value;
   }
 
   private void configureButtonBindings() {
     // m_shooter.setDefaultCommand(
     //   new RunCommand(() -> m_shooter.stop(), m_shooter));
 
+    leftJoystickButtonFour.whenHeld(new RunCommand(() -> {
+        // For testing purposes only:
+        m_serializer.setSerializer(
+          direction * -1 * testSerializerSpeed);
+
+        m_shooter.setAccelerator(testAcceleratorSpeed);
+      }))
+      .whenReleased(new RunCommand(() -> {
+        m_serializer.set(0);
+        m_shooter.stopAccelerator();
+      }));
+
+    leftJoystickThumbButton
+      .whenHeld(new RunCommand(() -> {
+        m_intake.set(direction * testIntakeSpeed);
+      }))
+      .whenReleased(new RunCommand(() -> {
+        m_intake.set(0);
+      }));
+
+    leftJoystickTrigger
+        .whenHeld(new RunCommand(() ->
+          m_shooter.setFlywheel(testFlywheelSpeed)))
+        .whenReleased(new RunCommand(() -> m_shooter.stopFlywheel()));
+
     // leftJoystickTrigger
-    //     .whenHeld(new RunCommand(() -> m_shooter.set(4000, 4000), m_shooter))
+    //     .whenHeld(new RunCommand(() ->
+    //       m_shooter.set(0, testFlywheelSpeed), m_shooter))
     //     .whenReleased(new RunCommand(() -> m_shooter.stop(), m_shooter));
 
     // leftJoystickTrigger
     //     .whenHeld(new RunCommand(() -> m_shooter.set(Constants.acceleratorSetpoint, Constants.flywheelSetpoint), m_shooter))
     //     .whenReleased(new RunCommand(() -> m_shooter.stop(), m_shooter));
     
-    // leftJoystickTrigger
-    //     .whenHeld(new Climb(m_climber, true));
+    rightJoystickTrigger
+        .whenHeld(new Climb(m_climber, true));
   
-    // leftJoystickThumbButton
-    //   .whenHeld(new Climb(m_climber, false));
+    rightJoystickThumbButton
+      .whenHeld(new Climb(m_climber, false));
 
-    // leftJoystickButtonFour
-    //   .whenPressed(new ClimbToSetpoint(m_climber), false);
+    rightJoystickButtonFour
+      .whenPressed(new ClimbToSetpoint(m_climber), false);
     
     // xboxAButton
     //   .whenHeld(new IntakePowerCells(m_intake, m_serializer, Constants.intakeSpeed, Constants.serializerSpeed))

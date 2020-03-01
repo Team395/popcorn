@@ -36,29 +36,30 @@ public final class Constants {
     public static final double flywheelF = 0.046;
 
     // Setpoint for the shooter
-    public static final int acceleratorSetpoint = 5000;
+    public static final int acceleratorSetpoint = 4200;
+    // 8600 for initiation line
     public static final int flywheelSetpoint = 13000;
 
     // Drivetrain w/ CTRE Falcon 500s/TalonFXs
-    public static final int driveLeftLeaderFalconID = 7;
-    public static final int driveLeftFollowerFalconID = 8;
-    public static final int driveRightLeaderFalconID = 5;
-    public static final int driveRightFollowerFalconID = 6;
+    public static final int driveLeftLeaderFalconID = 4;
+    public static final int driveLeftFollowerFalconID = 3;
+    public static final int driveRightLeaderFalconID = 2;
+    public static final int driveRightFollowerFalconID = 1;
 
     // Shooter w/ CTRE Falcon 500s/TalonFXs and Rev Robotics SparkMAX/NEO
-    public static final int flywheelLeaderTalonID = 1;
-    public static final int flywheelFollowerTalonID = 2;
-    public static final int acceleratorSparkID = 3;
+    public static final int flywheelLeaderTalonID = 10;
+    public static final int flywheelFollowerTalonID = 9;
+    public static final int acceleratorSparkID = 8;
     // Shooter Hood
     public static final int shooterHoodSolenoidForward = 2;
     public static final int shooterHoodSolenoidReverse = 3;
 
     //climber
-    public static final int climberSparkID = 3;
+    public static final int climberSparkID = 11;
 
     // Intake
-    public static final int intakeRollerTalonId = 9;
-    public static final int omniBarTalonId = 10;
+    public static final int intakeRollerTalonId = 7;
+
     // Intake Solenoids
     public static final int intakeSolenoidLeftForward = 0;
     public static final int intakeSolenoidLeftReverse = 1;
@@ -66,8 +67,8 @@ public final class Constants {
     public static double intakeSpeed = 0.7;
 
     // Serializer
-    public static final int serializerLeaderSparkMaxId = 11;
-    public static final int serializerFollowerSparkMaxId = 12;
+    public static final int serializerLeaderSparkMaxId = 6;
+    public static final int serializerFollowerSparkMaxId = 5;
     @Config
     public static double serializerSpeed = 0.5;
 }
