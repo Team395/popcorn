@@ -71,4 +71,6 @@ public final class Constants {
     public static final int serializerFollowerSparkMaxId = 5;
     @Config
     public static double serializerSpeed = 0.5;
+
+    public static final double kJoystickTurnDeadzone = 0.15;
 }

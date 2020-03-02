@@ -140,4 +140,8 @@ public class Shooter extends SubsystemBase implements Loggable {
   public void stopFlywheel() {
     flywheelLeaderTalonFX.set(ControlMode.PercentOutput, 0);
   }
+
+  public int getFlywheelClosedLoopError() {
+    return flywheelLeaderTalonFX.getClosedLoopError();
+  }
 }
