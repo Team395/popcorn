@@ -35,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -219,6 +220,9 @@ public class RobotContainer {
       .whenHeld(
         new InstantCommand(() -> m_shooter.setFlywheel(testFlywheelSpeed), m_shooter)
         .andThen(
+        new WaitCommand(1)
+        )
+        .andThen(  
         new WaitForFlywheelToReachSetpoint(m_shooter, this))
         .andThen(
         new InstantCommand(() -> {
@@ -234,7 +238,7 @@ public class RobotContainer {
             m_shooter.stopFlywheel();
             m_shooter.stopAccelerator();
           }, m_shooter, m_serializer)
-        );
+      );
 
     // leftJoystickTrigger
     //   .whenHeld(new SequentialCommandGroup(
