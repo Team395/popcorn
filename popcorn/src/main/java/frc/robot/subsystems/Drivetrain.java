@@ -17,7 +17,6 @@ public class Drivetrain extends SubsystemBase {
     // CANSparkMax leftFollower = new CANSparkMax(Constants.driveLeftFollowerSparkID, MotorType.kBrushless);
     // CANSparkMax rightLeader = new CANSparkMax(Constants.driveRightLeaderSparkID, MotorType.kBrushless);
     // CANSparkMax rightFollower = new CANSparkMax(Constants.driveRightFollowerSparkID, MotorType.kBrushless);
-
     WPI_TalonFX leftLeader = new WPI_TalonFX(Constants.driveLeftLeaderFalconID);
     WPI_TalonFX leftFollower = new WPI_TalonFX(Constants.driveLeftFollowerFalconID);
     WPI_TalonFX rightLeader = new WPI_TalonFX(Constants.driveRightLeaderFalconID);

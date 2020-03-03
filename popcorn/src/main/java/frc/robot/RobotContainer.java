@@ -219,11 +219,10 @@ public class RobotContainer {
       leftJoystickTrigger
       .whenHeld(
         new InstantCommand(() -> m_shooter.setFlywheel(testFlywheelSpeed), m_shooter)
-        .andThen(
-        new WaitCommand(1)
-        )
-        .andThen(  
+        .andThen( 
         new WaitForFlywheelToReachSetpoint(m_shooter, this))
+        .andThen(
+        new WaitCommand(1))
         .andThen(
         new InstantCommand(() -> {
             m_serializer.setSerializer(
