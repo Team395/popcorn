@@ -9,16 +9,19 @@ public class IntakePowerCells extends CommandBase {
     private Intake intake;
     private Serializer serializer;
     private double intakeSpeed;
-    private double serializerSpeed;
+    private double frontSerializerSpeed;
+    private double backSerializerSpeed;
 
     public IntakePowerCells(Intake intakeSystem
             , Serializer serializerSystem
             , double intakeSpeedToSet
-            , double serializerSpeedToSet) {
+            , double frontSerializerSpeedToSet
+            , double backSerializerSpeedToSet) {
         intake = intakeSystem;
         serializer = serializerSystem;
         intakeSpeed = intakeSpeedToSet;
-        serializerSpeed = serializerSpeedToSet;
+        frontSerializerSpeed = frontSerializerSpeedToSet;
+        backSerializerSpeed = backSerializerSpeedToSet;
 
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(intakeSystem, serializerSystem);
@@ -29,7 +32,7 @@ public class IntakePowerCells extends CommandBase {
       public void initialize() {
           intake.moveIntake(IntakePositions.DOWN);
           intake.set(intakeSpeed);
-          serializer.set(serializerSpeed);
+          serializer.set(frontSerializerSpeed, backSerializerSpeed);
       }
     
       // Called every time the scheduler runs while the command is scheduled.

@@ -21,7 +21,7 @@ public class StowIntake extends CommandBase {
       public void initialize() {
           intake.moveIntake(IntakePositions.UP);
           intake.set(0);
-          serializer.set(0);
+          serializer.set(0, 0);
       }
     
       // Called every time the scheduler runs while the command is scheduled.

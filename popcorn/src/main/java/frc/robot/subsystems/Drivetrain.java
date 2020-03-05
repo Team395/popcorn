@@ -49,24 +49,24 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         rightLeader.configFactoryDefault();
         rightFollower.configFactoryDefault();
 
-        // leftLeader.setNeutralMode(NeutralMode.Brake);
-        // leftFollower.setNeutralMode(NeutralMode.Brake);
-        // rightLeader.setNeutralMode(NeutralMode.Brake);
-        // rightFollower.setNeutralMode(NeutralMode.Brake);
+        leftLeader.setNeutralMode(NeutralMode.Brake);
+        leftFollower.setNeutralMode(NeutralMode.Brake);
+        rightLeader.setNeutralMode(NeutralMode.Brake);
+        rightFollower.setNeutralMode(NeutralMode.Brake);
 
-        // leftLeader.setInverted(false);
-        // leftFollower.setInverted(InvertType.FollowMaster);
-        // rightLeader.setInverted(true);
-        // rightFollower.setInverted(InvertType.FollowMaster);
+        leftLeader.setInverted(false);
+        leftFollower.setInverted(InvertType.FollowMaster);
+        rightLeader.setInverted(true);
+        rightFollower.setInverted(InvertType.FollowMaster);
 
-        // leftFollower.follow(leftLeader);
-        // rightFollower.follow(rightLeader);
+        leftFollower.follow(leftLeader);
+        rightFollower.follow(rightLeader);
     }
 
     public void tankDrive(double leftSpeed, double rightSpeed) {
         // differentialDrive.tankDrive(leftSpeed, rightSpeed);
-        leftLeader.set(TalonFXControlMode.PercentOutput, 0);
-        rightLeader.set(TalonFXControlMode.PercentOutput, 0);
+        leftLeader.set(TalonFXControlMode.PercentOutput, leftSpeed);
+        rightLeader.set(TalonFXControlMode.PercentOutput, rightSpeed);
     }
 
     public void shiftGear(final DrivetrainShifterGears gear) {

@@ -92,13 +92,14 @@ public final class Constants {
     public static final int intakeSolenoidLeftForward = 0;
     public static final int intakeSolenoidLeftReverse = 1;
     @Config
-    public static double intakeSpeed = 0.7;
+    public static double intakeSpeed = 0.5;
 
     // Serializer
     public static final int serializerLeaderSparkMaxId = 6;
     public static final int serializerFollowerSparkMaxId = 5;
     @Config
-    public static double serializerSpeed = 0.5;
+    public static double frontSerializerSpeed = 0.4;
+    public static double backSerializerSpeed = 0.1;
 
     public static final double kJoystickTurnDeadzone = 0.15;
 

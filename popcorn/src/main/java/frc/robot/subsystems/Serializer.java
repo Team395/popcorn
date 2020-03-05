@@ -37,12 +37,12 @@ public class Serializer extends SubsystemBase {
     // This method will be called once per scheduler run
     }
 
-    public void set(final double speed){
-        serializerLeader.set(speed);
-        serializerFollower.set(speed);
+    public void set(final double frontSpeed, double backSpeed){
+        serializerLeader.set(frontSpeed);
+        serializerFollower.set(backSpeed);
     }
 
-    public void setSerializer(final double serializerSpeed){
-            set(serializerSpeed);
-    }
+    // public void setSerializer(final double serializerSpeed){
+    //         set(serializerSpeed);
+    // }
 }
