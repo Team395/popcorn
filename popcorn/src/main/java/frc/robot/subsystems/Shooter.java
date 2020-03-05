@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems;
 
+import javax.swing.text.Position;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -38,8 +40,10 @@ public class Shooter extends SubsystemBase implements Loggable {
     TalonFX flywheelFollowerTalonFX = new TalonFX(Constants.flywheelFollowerTalonID);
     TalonFXConfiguration configs = new TalonFXConfiguration();
 
-    // DoubleSolenoid shooterHoodSolenoid = new DoubleSolenoid(Constants.shooterHoodSolenoidForward
-    //   , Constants.shooterHoodSolenoidReverse);
+    DoubleSolenoid shooterHoodSolenoid = new DoubleSolenoid(Constants.shooterHoodSolenoidForward
+      , Constants.shooterHoodSolenoidReverse);
+
+  public ShooterHoodPositions currentPosition = ShooterHoodPositions.UP;
 
   public Shooter() {
     configureAccelerator();
@@ -118,15 +122,29 @@ public class Shooter extends SubsystemBase implements Loggable {
   }
 
   public void moveHood(final ShooterHoodPositions position) {
-    // switch(position) {
-    //     case UP:
-    //         shooterHoodSolenoid.set(Value.kReverse);
-    //         break;
-    //     case DOWN:
-    //         shooterHoodSolenoid.set(Value.kForward);
-    //         break;
-    // }
-}
+    switch(position) {
+        case UP:
+            shooterHoodSolenoid.set(Value.kReverse);
+            currentPosition = ShooterHoodPositions.UP;
+            break;
+        case DOWN:
+            shooterHoodSolenoid.set(Value.kForward);
+            currentPosition = ShooterHoodPositions.DOWN;
+            break;
+    }
+  }
+
+  public void toggleHoodPosition(){
+    switch(currentPosition) {
+      case UP:
+        moveHood(ShooterHoodPositions.DOWN);
+        break;
+      case DOWN:
+        moveHood(ShooterHoodPositions.UP);
+        break;
+    }
+  }
+
 
   public void stop() {
     acceleratorController.setReference(0, ControlType.kDutyCycle);

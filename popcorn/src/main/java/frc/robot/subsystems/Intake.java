@@ -16,13 +16,16 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.enums.IntakePositions;
+import io.github.oblarg.oblog.Loggable;
 
-public class Intake extends SubsystemBase {
+public class Intake extends SubsystemBase implements Loggable {
     private final TalonSRX intakeRoller = new TalonSRX(Constants.intakeRollerTalonId);
     
-    // private final DoubleSolenoid intakeSolenoid =
-    //     new DoubleSolenoid(Constants.intakeSolenoidLeftForward
-    //         , Constants.intakeSolenoidLeftReverse);
+    private final DoubleSolenoid intakeSolenoid =
+        new DoubleSolenoid(Constants.intakeSolenoidLeftForward
+            , Constants.intakeSolenoidLeftReverse);
+
+    public IntakePositions currentPosition = IntakePositions.UP;
 
     public Intake() {
         intakeRoller.setNeutralMode(NeutralMode.Brake);
@@ -38,13 +41,26 @@ public class Intake extends SubsystemBase {
     }
 
     public void moveIntake(final IntakePositions position) {
-        // switch(position) {
-        //     case UP:
-        //         intakeSolenoid.set(Value.kReverse);
-        //         break;
-        //     case DOWN:
-        //         intakeSolenoid.set(Value.kForward);
-        //         break;
-        // }
+        switch(position) {
+            case UP:
+                intakeSolenoid.set(Value.kForward);
+                currentPosition = IntakePositions.UP;
+                break;
+            case DOWN:
+                intakeSolenoid.set(Value.kReverse);
+                currentPosition = IntakePositions.DOWN;
+                break;
+        }
+    }
+
+    public void toggleIntakePosition() {
+        switch(currentPosition) {
+            case UP:
+                moveIntake(IntakePositions.DOWN);
+                break;
+            case DOWN:
+                moveIntake(IntakePositions.UP);
+                break;
+        }
     }
 }

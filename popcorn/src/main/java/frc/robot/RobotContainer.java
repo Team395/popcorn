@@ -9,6 +9,19 @@ package frc.robot;
 
 import java.util.Set;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
+import com.ctre.phoenix.motorcontrol.SensorTerm;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.FollowerType;
+import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
+import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -22,6 +35,9 @@ import frc.robot.commands.TankDrive;
 import frc.robot.commands.WaitForFlywheelToReachSetpoint;
 import frc.robot.commands.intake.IntakePowerCells;
 import frc.robot.commands.intake.StowIntake;
+import frc.robot.enums.DrivetrainShifterGears;
+import frc.robot.enums.IntakePositions;
+import frc.robot.enums.ShooterHoodPositions;
 import frc.robot.subsystems.Climber;
 // import frc.robot.subsystems.ColorSensor;
 import frc.robot.subsystems.Drivetrain;
@@ -51,7 +67,7 @@ public class RobotContainer {
   // private final ColorMatch m_colorMatch = new ColorMatch(m_colorSensor);
 
   private final Drivetrain m_drivetrain = new Drivetrain();
-  private final TankDrive m_tankDrive = new TankDrive(m_drivetrain, this);
+  // private final TankDrive m_tankDrive = new TankDrive(m_drivetrain, this);
 
   public final Climber m_climber = new Climber();
   // private final Hanger m_hanger = new Hanger(m_climber, extend);
@@ -61,23 +77,28 @@ public class RobotContainer {
   private final Intake m_intake = new Intake();
   private final Serializer m_serializer = new Serializer();
 
-  Joystick leftJoystick = new Joystick(3);
+  // Joystick leftJoystick = new Joystick(3);
   // Joystick rightJoystick = new Joystick(4);
-  
-  JoystickButton leftJoystickTrigger = new JoystickButton(leftJoystick, 1);
-  JoystickButton leftJoystickThumbButton = new JoystickButton(leftJoystick, 2);
-  JoystickButton leftJoystickButtonFour = new JoystickButton(leftJoystick, 4);
+
+
+  // JoystickButton leftJoystickTrigger = new JoystickButton(leftJoystick, 1);
+  // JoystickButton leftJoystickThumbButton = new JoystickButton(leftJoystick, 2);
+  // JoystickButton leftJoystickButtonFour = new JoystickButton(leftJoystick, 4);
 
   // JoystickButton rightJoystickTrigger = new JoystickButton(rightJoystick, 1);
   // JoystickButton rightJoystickThumbButton = new JoystickButton(rightJoystick, 2);
   // JoystickButton rightJoystickButtonFour = new JoystickButton(rightJoystick, 4);
   
   XboxController xboxController = new XboxController(0);
-  // JoystickButton xboxAButton = new JoystickButton(xboxController, 2);
+  JoystickButton xboxAButton = new JoystickButton(xboxController, 1);
+  JoystickButton xboxBButton = new JoystickButton(xboxController, 2);
+  JoystickButton xboxYButton = new JoystickButton(xboxController, 4);
+
 
   static final double joystickDeadzone = 0.15;
   // static final double xboxDeadzone = 0.25;
 
+  Boolean driveDistance = false;
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
@@ -85,7 +106,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     // m_colorSensor.setDefaultCommand(m_colorMatch);
-    m_drivetrain.setDefaultCommand(m_tankDrive);
+    // m_drivetrain.setDefaultCommand(m_tankDrive);
     // m_climber.setDefaultCommand(m_hanger);
   }
 
@@ -93,6 +114,36 @@ public class RobotContainer {
   }
 
   public void teleopPeriodic() {
+    if(m_intake.currentPosition == IntakePositions.DOWN) {
+      SmartDashboard.putString("IntakePosition", "DOWN");
+    } else {
+      SmartDashboard.putString("IntakePosition", "UP");
+    }
+
+    if(m_shooter.currentPosition == ShooterHoodPositions.DOWN) {
+      SmartDashboard.putString("ShooterHoodPosition", "DOWN");
+    } else {
+      SmartDashboard.putString("ShooterHoodPosition", "UP");
+    }
+
+    if(m_drivetrain.currentPosition == DrivetrainShifterGears.LOW) {
+      SmartDashboard.putString("DrivetrainShifterPosition", "LOW");
+    } else {
+      SmartDashboard.putString("DrivetrainShifterPosition", "HIGH");
+    }
+
+    if(xboxController.getXButtonPressed()) {
+      m_drivetrain.configDrivetrainDriveStraight();
+      m_drivetrain.zeroSensors();
+
+      double target_sensorUnits = -Constants.kSensorUnitsPerRotation * 20;
+			double target_turn = m_drivetrain.rightLeader.getSelectedSensorPosition(1);
+			
+			/* Configured for Position Closed loop on Integrated Sensors' Sum and Auxiliary PID on Pigeon's Yaw */
+			m_drivetrain.driveStraight(target_sensorUnits, target_turn);
+    }
+
+    m_drivetrain.updateSmartDashboard();
   }
 
   public void teleopInit() {
@@ -100,6 +151,9 @@ public class RobotContainer {
     // SmartDashboard
     //   .putNumber("EncoderStart"
     //     , m_climber.getEncoderPosition());
+    m_intake.moveIntake(IntakePositions.UP);
+    m_shooter.moveHood(ShooterHoodPositions.UP);
+    m_drivetrain.shiftGear(DrivetrainShifterGears.LOW);
   }
 
   public double getControllerLeftTrigger() {
@@ -193,51 +247,58 @@ public class RobotContainer {
     // m_shooter.setDefaultCommand(
     //   new RunCommand(() -> m_shooter.stop(), m_shooter));
 
-    leftJoystickButtonFour.whenHeld(new RunCommand(() -> {
-        // For testing purposes only:
-        m_serializer.setSerializer(
-          direction * -1 * testSerializerSpeed);
+    // leftJoystickButtonFour.whenHeld(new RunCommand(() -> {
+    //     // For testing purposes only:
+    //     m_serializer.setSerializer(
+    //       direction * -1 * testSerializerSpeed);
 
-        // m_shooter.setAccelerator(testAcceleratorSpeed);
-      }))
-      .whenReleased(new InstantCommand(() -> {
-        m_serializer.set(0);
-        // m_shooter.stopAccelerator();
-      }));
+    //     // m_shooter.setAccelerator(testAcceleratorSpeed);
+    //   }))
+    //   .whenReleased(new InstantCommand(() -> {
+    //     m_serializer.set(0);
+    //     // m_shooter.stopAccelerator();
+    //   }));
 
-    leftJoystickThumbButton
-      .whenHeld(new RunCommand(() -> {
-        m_intake.set(direction * testIntakeSpeed);
-        m_serializer.setSerializer(
-          direction * -1 * testSerializerSpeed);
-      }))
-      .whenReleased(new InstantCommand(() -> {
-        m_intake.set(0);
-        m_serializer.set(0);
-      }));
+    // leftJoystickThumbButton
+    //   .whenHeld(new RunCommand(() -> {
+    //     m_intake.set(direction * testIntakeSpeed);
+    //     m_serializer.setSerializer(
+    //       direction * -1 * testSerializerSpeed);
+    //   }))
+    //   .whenReleased(new InstantCommand(() -> {
+    //     m_intake.set(0);
+    //     m_serializer.set(0);
+    //   }));
 
-      leftJoystickTrigger
-      .whenHeld(
-        new InstantCommand(() -> m_shooter.setFlywheel(testFlywheelSpeed), m_shooter)
-        .andThen( 
-        new WaitForFlywheelToReachSetpoint(m_shooter, this))
-        .andThen(
-        new WaitCommand(1))
-        .andThen(
-        new InstantCommand(() -> {
-            m_serializer.setSerializer(
-              direction * -1 * testSerializerSpeed);
+    //   leftJoystickTrigger
+    //   .whenHeld(
+    //     new InstantCommand(() -> m_shooter.setFlywheel(testFlywheelSpeed), m_shooter)
+    //     .andThen( 
+    //     new WaitForFlywheelToReachSetpoint(m_shooter, this))
+    //     .andThen(
+    //     new WaitCommand(1))
+    //     .andThen(
+    //     new InstantCommand(() -> {
+    //         m_serializer.setSerializer(
+    //           direction * -1 * testSerializerSpeed);
 
-            m_shooter.setAccelerator(testAcceleratorSpeed);
-          }
-        )))
-      .whenReleased(
-        new RunCommand(() -> {
-            m_serializer.set(0);
-            m_shooter.stopFlywheel();
-            m_shooter.stopAccelerator();
-          }, m_shooter, m_serializer)
-      );
+    //         m_shooter.setAccelerator(testAcceleratorSpeed);
+    //       }
+    //     )))
+    //   .whenReleased(
+    //     new RunCommand(() -> {
+    //         m_serializer.set(0);
+    //         m_shooter.stopFlywheel();
+    //         m_shooter.stopAccelerator();
+    //       }, m_shooter, m_serializer)
+    //   );
+
+      xboxAButton.whenPressed(
+        new InstantCommand(() -> m_intake.toggleIntakePosition(), m_intake));
+      xboxBButton.whenPressed(
+        new InstantCommand(()-> m_shooter.toggleHoodPosition(), m_shooter));
+      xboxYButton.whenPressed(
+        new InstantCommand(() -> m_drivetrain.toggleGearPosition(), m_drivetrain));
 
     // leftJoystickTrigger
     //   .whenHeld(new SequentialCommandGroup(
