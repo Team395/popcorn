@@ -32,6 +32,7 @@ public final class Constants {
 	
 	// This is a property of the Pigeon IMU, and should not be changed.
     public final static int kPigeonUnitsPerRotation = 8192;
+    public final static boolean kGyroReversed = false;
     
 	// Motor neutral dead-band, set to the minimum 0.1%.
     public final static double kNeutralDeadband = 0.001;
@@ -51,7 +52,17 @@ public final class Constants {
      * 
 	 * 	                                    			  kP   kI   kD   kF               Iz    PeakOut */
 	public final static Gains kGains_Distance = new Gains( 0.1, 0.0,  0.0, 0.0,            100,  0.50 );
-	public final static Gains kGains_Turning = new Gains( 2.0, 0.0,  4.0, 0.0,            200,  1.00 );
+    public final static Gains kGains_Turning = new Gains( 2.0, 0.0,  4.0, 0.0,            200,  1.00 );
+    private final static double kGains_Pigeon_kP = 0.025;
+    public final static Gains kGains_Pigeon = new Gains( kGains_Pigeon_kP
+        , 0.0
+        , kGains_Pigeon_kP / 10.0
+        , 0.0
+        , 200
+        , 1.00 );
+    public final static double kTurnClamp = 1.0;
+    public final static double kTurnMinimumSpeed = 0.07;
+    public final static double kTurnAcceptableErrorDegrees = 0.5;
 
     // Constants for accelerator PID
     public static final double acceleratorP = 0.0001;

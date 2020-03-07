@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 import frc.robot.enums.DrivetrainShifterGears;
 import io.github.oblarg.oblog.Loggable;
@@ -66,6 +67,18 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     public void tankDrive(double leftSpeed, double rightSpeed) {
         leftLeader.set(TalonFXControlMode.PercentOutput, leftSpeed);
         rightLeader.set(TalonFXControlMode.PercentOutput, rightSpeed);
+    }
+
+    public void arcadeDrive(double speed, double turn) {
+        SmartDashboard.putNumber("turn", turn);
+        turn = MathUtil.clamp(turn, -1 * Constants.kTurnClamp, Constants.kTurnClamp);
+        double sign = Math.signum(turn);
+        if(sign > 0) { turn = Math.max(Constants.kTurnMinimumSpeed, turn); }
+        else if(sign < 0) { turn = Math.min(-1 * Constants.kTurnMinimumSpeed, turn); }
+        SmartDashboard.putNumber("massagedTurn", turn);
+
+        leftLeader.set(ControlMode.PercentOutput, speed + turn);
+        rightLeader.set(ControlMode.PercentOutput, speed - turn);
     }
 
     public void shiftGear(final DrivetrainShifterGears gear) {
@@ -145,6 +158,13 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         rightLeader.set(TalonFXControlMode.Position, targetStraightUnits, DemandType.AuxPID, targetTurn);
         // rightLeader.set(ControlMode.Position, targetStraightUnits);
         leftLeader.follow(rightLeader, FollowerType.AuxOutput1);
+    }
+
+    public double getHeading() {
+        var pidgeyArray = new double[3];
+        pidgey.getYawPitchRoll(pidgeyArray);
+        SmartDashboard.putNumber("pidgey yaw", pidgeyArray[0]);
+        return pidgeyArray[0] * (Constants.kGyroReversed ? -1 : 1);
     }
 
     public void updateSmartDashboard() {

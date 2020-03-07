@@ -34,6 +34,7 @@ import frc.robot.commands.ClimbToSetpoint;
 import frc.robot.commands.TankDrive;
 import frc.robot.commands.WaitForFlywheelToReachSetpoint;
 import frc.robot.commands.autonomous.DriveFeet;
+import frc.robot.commands.autonomous.TurnDegrees;
 import frc.robot.commands.intake.IntakePowerCells;
 import frc.robot.commands.intake.StowIntake;
 import frc.robot.enums.DrivetrainShifterGears;
@@ -134,7 +135,7 @@ public class RobotContainer {
       SmartDashboard.putString("DrivetrainShifterPosition", "HIGH");
     }
 
-    m_drivetrain.updateSmartDashboard();
+    // m_drivetrain.updateSmartDashboard();
   }
 
   public void teleopInit() {
@@ -229,6 +230,11 @@ public class RobotContainer {
   public void setFlywheelLoopsToSettle(int value) {
     flywheelLoopsToSettle = value;
   }
+
+  // @Config
+  // public void setTurn(double value) {
+  //   m_drivetrain.arcadeDrive(0, value);
+  // }
 
   private void configureButtonBindings() {
     // m_shooter.setDefaultCommand(
@@ -348,10 +354,15 @@ public class RobotContainer {
     // xboxXButton.whenHeld(new InstantCommand(() -> m_shooter.acceleratorSparkMax.set(-1)))
     // .whenReleased(new InstantCommand(() -> m_shooter.stopAccelerator()));
 
+    // xboxXButton
+    //       .whenPressed(new DriveFeet(m_drivetrain, 5));
+    // xboxYButton
+    //       .whenPressed(new DriveFeet(m_drivetrain, -5));
+
     xboxXButton
-          .whenPressed(new DriveFeet(m_drivetrain, 5));
+          .whenPressed(new TurnDegrees(m_drivetrain, 180));
     xboxYButton
-          .whenPressed(new DriveFeet(m_drivetrain, -5));
+          .whenPressed(new TurnDegrees(m_drivetrain, -180));
   } 
 
 
