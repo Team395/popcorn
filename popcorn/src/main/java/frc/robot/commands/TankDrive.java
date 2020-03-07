@@ -31,14 +31,22 @@ public class TankDrive extends CommandBase {
             turn = 0.0;
         }
     
+        double left = rightTrigger - leftTrigger;
+        double right = rightTrigger - leftTrigger;
+
         turn = turn * turn * Math.signum(turn);
     
-        double left = rightTrigger - leftTrigger + turn;
-        double right = rightTrigger - leftTrigger - turn;
+        if(left > 0) { turn *= -1.0; }
+
+        left += turn;
+        right -= turn;
+
         left = Math.min(1.0, Math.max(-1.0, left));
         right = Math.max(-1.0, Math.min(1.0, right));
     
         m_drivetrain.tankDrive(left, right);
+        SmartDashboard.putNumber("left", left);
+        SmartDashboard.putNumber("right", right);
     }
 
     public void traditionalTankDrive() {
