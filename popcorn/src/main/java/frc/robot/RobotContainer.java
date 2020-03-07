@@ -33,6 +33,7 @@ import frc.robot.commands.ClimbToSetpoint;
 // import frc.robot.commands.ColorMatch;
 import frc.robot.commands.TankDrive;
 import frc.robot.commands.WaitForFlywheelToReachSetpoint;
+import frc.robot.commands.autonomous.DriveFeet;
 import frc.robot.commands.intake.IntakePowerCells;
 import frc.robot.commands.intake.StowIntake;
 import frc.robot.enums.DrivetrainShifterGears;
@@ -93,6 +94,7 @@ public class RobotContainer {
   JoystickButton xboxAButton = new JoystickButton(xboxController, 1);
   JoystickButton xboxBButton = new JoystickButton(xboxController, 2);
   JoystickButton xboxYButton = new JoystickButton(xboxController, 4);
+  JoystickButton xboxXButton = new JoystickButton(xboxController, 3);
 
 
   static final double joystickDeadzone = 0.15;
@@ -132,25 +134,10 @@ public class RobotContainer {
       SmartDashboard.putString("DrivetrainShifterPosition", "HIGH");
     }
 
-    // if(xboxController.getXButtonPressed()) {
-    //   m_drivetrain.configDrivetrainDriveStraight();
-    //   m_drivetrain.zeroSensors();
-
-    //   double target_sensorUnits = -Constants.kSensorUnitsPerRotation * 20;
-		// 	double target_turn = m_drivetrain.rightLeader.getSelectedSensorPosition(1);
-			
-		// 	/* Configured for Position Closed loop on Integrated Sensors' Sum and Auxiliary PID on Pigeon's Yaw */
-		// 	m_drivetrain.driveStraight(target_sensorUnits, target_turn);
-    // }
-
-    // m_drivetrain.updateSmartDashboard();
+    m_drivetrain.updateSmartDashboard();
   }
 
   public void teleopInit() {
-    // m_drivetrain.tankDrive(0.0, 0.0);
-    // SmartDashboard
-    //   .putNumber("EncoderStart"
-    //     , m_climber.getEncoderPosition());
     m_intake.moveIntake(IntakePositions.UP);
     m_shooter.moveHood(ShooterHoodPositions.UP);
     m_drivetrain.shiftGear(DrivetrainShifterGears.LOW);
@@ -303,17 +290,17 @@ public class RobotContainer {
     // leftJoystickTrigger
     xboxBButton
       .whenHeld(new SequentialCommandGroup(
-        new InstantCommand(() -> m_shooter.setFlywheel(5000), m_shooter),
+        new InstantCommand(() -> m_shooter.setFlywheel(Constants.flywheelSetpoint), m_shooter),
         new WaitForFlywheelToReachSetpoint(m_shooter, this),
         new InstantCommand(() -> {
             m_serializer.set(
-              -1.0, -1.0);
+              -1, -1);
 
             m_shooter.setAccelerator(4200);
           }
         )))
       .whenReleased(
-        new RunCommand(() -> {
+        new InstantCommand(() -> {
             m_serializer.set(0, 0);
             m_shooter.stopFlywheel();
             m_shooter.stopAccelerator();
@@ -344,8 +331,27 @@ public class RobotContainer {
     //   .whenPressed(new ClimbToSetpoint(m_climber), false);
     
     xboxAButton
-      .whenHeld(new IntakePowerCells(m_intake, m_serializer, Constants.intakeSpeed, -Constants.frontSerializerSpeed, -Constants.backSerializerSpeed))
+      .whenHeld(new IntakePowerCells(m_intake
+        , m_serializer
+        , Constants.intakeSpeed
+        , -Constants.frontSerializerSpeed
+        , -Constants.backSerializerSpeed))
       .whenReleased(new StowIntake(m_intake, m_serializer));
+
+    // xboxYButton.whenHeld(new InstantCommand(() -> m_shooter.set(1 * Constants.acceleratorSetpoint, 0)))
+    // .whenReleased(new InstantCommand(() -> m_shooter.stopAccelerator()));
+    // xboxXButton.whenHeld(new InstantCommand(() -> m_shooter.set(-1 * Constants.acceleratorSetpoint, 0)))
+    // .whenReleased(new InstantCommand(() -> m_shooter.stopAccelerator()));
+    
+    // xboxYButton.whenHeld(new InstantCommand(() -> m_shooter.acceleratorSparkMax.set(1)))
+    // .whenReleased(new InstantCommand(() -> m_shooter.stopAccelerator()));
+    // xboxXButton.whenHeld(new InstantCommand(() -> m_shooter.acceleratorSparkMax.set(-1)))
+    // .whenReleased(new InstantCommand(() -> m_shooter.stopAccelerator()));
+
+    xboxXButton
+          .whenPressed(new DriveFeet(m_drivetrain, 5));
+    xboxYButton
+          .whenPressed(new DriveFeet(m_drivetrain, -5));
   } 
 
 
