@@ -22,6 +22,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -55,6 +56,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -91,12 +93,13 @@ public class RobotContainer {
   // JoystickButton rightJoystickThumbButton = new JoystickButton(rightJoystick, 2);
   // JoystickButton rightJoystickButtonFour = new JoystickButton(rightJoystick, 4);
   
-  XboxController xboxController = new XboxController(0);
-  JoystickButton xboxAButton = new JoystickButton(xboxController, 1);
-  JoystickButton xboxBButton = new JoystickButton(xboxController, 2);
-  JoystickButton xboxYButton = new JoystickButton(xboxController, 4);
-  JoystickButton xboxXButton = new JoystickButton(xboxController, 3);
+  XboxController driverController = new XboxController(0);
+  JoystickButton xboxAButton = new JoystickButton(driverController, 1);
+  JoystickButton xboxBButton = new JoystickButton(driverController, 2);
+  JoystickButton xboxYButton = new JoystickButton(driverController, 4);
+  JoystickButton xboxXButton = new JoystickButton(driverController, 3);
 
+  public XboxController operatorController = new XboxController(1); 
 
   static final double joystickDeadzone = 0.15;
   // static final double xboxDeadzone = 0.25;
@@ -111,6 +114,19 @@ public class RobotContainer {
     // m_colorSensor.setDefaultCommand(m_colorMatch);
     m_drivetrain.setDefaultCommand(m_tankDrive);
     // m_climber.setDefaultCommand(m_hanger);
+
+    m_intake.setDefaultCommand(new RunCommand(() -> {
+      var speed = Math.abs(operatorController.getY(Hand.kRight)) > Constants.kJoystickTurnDeadzone
+        ? operatorController.getY(Hand.kRight)
+        : 0; 
+      m_intake.set(speed);
+    }, m_intake));
+    m_serializer.setDefaultCommand(new RunCommand(() -> {
+      var speed = Math.abs(operatorController.getY(Hand.kLeft)) > Constants.kJoystickTurnDeadzone
+      ? operatorController.getY(Hand.kLeft)
+      : 0; 
+      m_serializer.set(speed, speed);
+    }, m_serializer));
   }
 
   public void periodic() {
@@ -136,26 +152,29 @@ public class RobotContainer {
     }
 
     // m_drivetrain.updateSmartDashboard();
+    m_shooter.updateSmartDashboard();
   }
 
   public void teleopInit() {
     m_intake.moveIntake(IntakePositions.UP);
     m_shooter.moveHood(ShooterHoodPositions.UP);
     m_drivetrain.shiftGear(DrivetrainShifterGears.LOW);
+
+    CameraServer.getInstance().startAutomaticCapture();
   }
 
   public double getControllerLeftTrigger() {
-    return -1*xboxController.getTriggerAxis(Hand.kLeft);
+    return -1*driverController.getTriggerAxis(Hand.kLeft);
     // return xboxController.getRawAxis(XboxController.Axis.kLeftTrigger.value);
   }
 
   public double getControllerRightTrigger() {
-    return -1*xboxController.getTriggerAxis(Hand.kRight);
+    return -1*driverController.getTriggerAxis(Hand.kRight);
     // return xboxController.getRawAxis(XboxController.Axis.kRightTrigger.value);
   }
 
   public double getControllerTurn() {
-    return -1*xboxController.getX(Hand.kLeft);
+    return -1*driverController.getX(Hand.kLeft);
     // return xboxController.getRawAxis(XboxController.Axis.kLeftX.value);
   }
 
@@ -218,74 +237,7 @@ public class RobotContainer {
     testFlywheelSpeed = value;
   }
 
-  @Log
-  public int flywheelErrorThreshold = 100;
-  @Config
-  public void setFlywheelErrorThreshold(int value) {
-    flywheelErrorThreshold = value;
-  }
-  @Log
-  public int flywheelLoopsToSettle = 10;
-  @Config
-  public void setFlywheelLoopsToSettle(int value) {
-    flywheelLoopsToSettle = value;
-  }
-
-  // @Config
-  // public void setTurn(double value) {
-  //   m_drivetrain.arcadeDrive(0, value);
-  // }
-
   private void configureButtonBindings() {
-    // m_shooter.setDefaultCommand(
-    //   new RunCommand(() -> m_shooter.stop(), m_shooter));
-
-    // leftJoystickButtonFour.whenHeld(new RunCommand(() -> {
-    //     // For testing purposes only:
-    //     m_serializer.setSerializer(
-    //       direction * -1 * testSerializerSpeed);
-
-    //     // m_shooter.setAccelerator(testAcceleratorSpeed);
-    //   }))
-    //   .whenReleased(new InstantCommand(() -> {
-    //     m_serializer.set(0);
-    //     // m_shooter.stopAccelerator();
-    //   }));
-
-    // leftJoystickThumbButton
-    //   .whenHeld(new RunCommand(() -> {
-    //     m_intake.set(direction * testIntakeSpeed);
-    //     m_serializer.setSerializer(
-    //       direction * -1 * testSerializerSpeed);
-    //   }))
-    //   .whenReleased(new InstantCommand(() -> {
-    //     m_intake.set(0);
-    //     m_serializer.set(0);
-    //   }));
-
-    //   leftJoystickTrigger
-    //   .whenHeld(
-    //     new InstantCommand(() -> m_shooter.setFlywheel(testFlywheelSpeed), m_shooter)
-    //     .andThen( 
-    //     new WaitForFlywheelToReachSetpoint(m_shooter, this))
-    //     .andThen(
-    //     new WaitCommand(1))
-    //     .andThen(
-    //     new InstantCommand(() -> {
-    //         m_serializer.setSerializer(
-    //           direction * -1 * testSerializerSpeed);
-
-    //         m_shooter.setAccelerator(testAcceleratorSpeed);
-    //       }
-    //     )))
-    //   .whenReleased(
-    //     new RunCommand(() -> {
-    //         m_serializer.set(0);
-    //         m_shooter.stopFlywheel();
-    //         m_shooter.stopAccelerator();
-    //       }, m_shooter, m_serializer)
-    //   );
-
       // xboxAButton.whenPressed(
       //   new InstantCommand(() -> m_intake.toggleIntakePosition(), m_intake));
       // xboxBButton.whenPressed(
@@ -298,13 +250,13 @@ public class RobotContainer {
       .whenHeld(new SequentialCommandGroup(
         new InstantCommand(() -> m_shooter.setFlywheel(Constants.flywheelSetpoint), m_shooter),
         new WaitForFlywheelToReachSetpoint(m_shooter, this),
-        new InstantCommand(() -> {
+        new RunCommand(() -> {
             m_serializer.set(
               -1, -1);
 
             m_shooter.setAccelerator(4200);
           }
-        )))
+        , m_shooter, m_serializer)))
       .whenReleased(
         new InstantCommand(() -> {
             m_serializer.set(0, 0);
@@ -312,16 +264,6 @@ public class RobotContainer {
             m_shooter.stopAccelerator();
           }, m_shooter, m_serializer)
         );
-
-    // leftJoystickTrigger
-    //     .whenHeld(new RunCommand(() ->
-    //       m_shooter.setFlywheel(testFlywheelSpeed)))
-    //     .whenReleased(new RunCommand(() -> m_shooter.stopFlywheel()));
-
-    // leftJoystickTrigger
-    //     .whenHeld(new RunCommand(() ->
-    //       m_shooter.set(0, testFlywheelSpeed), m_shooter))
-    //     .whenReleased(new RunCommand(() -> m_shooter.stop(), m_shooter));
 
     // leftJoystickTrigger
     //     .whenHeld(new RunCommand(() -> m_shooter.set(Constants.acceleratorSetpoint, Constants.flywheelSetpoint), m_shooter))
@@ -337,32 +279,29 @@ public class RobotContainer {
     //   .whenPressed(new ClimbToSetpoint(m_climber), false);
     
     xboxAButton
-      .whenHeld(new IntakePowerCells(m_intake
+      .whileHeld(new IntakePowerCells(m_intake
         , m_serializer
+        , this
         , Constants.intakeSpeed
         , -Constants.frontSerializerSpeed
-        , -Constants.backSerializerSpeed))
-      .whenReleased(new StowIntake(m_intake, m_serializer));
-
-    // xboxYButton.whenHeld(new InstantCommand(() -> m_shooter.set(1 * Constants.acceleratorSetpoint, 0)))
-    // .whenReleased(new InstantCommand(() -> m_shooter.stopAccelerator()));
-    // xboxXButton.whenHeld(new InstantCommand(() -> m_shooter.set(-1 * Constants.acceleratorSetpoint, 0)))
-    // .whenReleased(new InstantCommand(() -> m_shooter.stopAccelerator()));
-    
-    // xboxYButton.whenHeld(new InstantCommand(() -> m_shooter.acceleratorSparkMax.set(1)))
-    // .whenReleased(new InstantCommand(() -> m_shooter.stopAccelerator()));
-    // xboxXButton.whenHeld(new InstantCommand(() -> m_shooter.acceleratorSparkMax.set(-1)))
-    // .whenReleased(new InstantCommand(() -> m_shooter.stopAccelerator()));
+        , -Constants.backSerializerSpeed));
+    xboxAButton.whenReleased(new StowIntake(m_intake, m_serializer));
 
     // xboxXButton
     //       .whenPressed(new DriveFeet(m_drivetrain, 5));
     // xboxYButton
     //       .whenPressed(new DriveFeet(m_drivetrain, -5));
 
-    xboxXButton
-          .whenPressed(new TurnDegrees(m_drivetrain, 180));
+    // xboxXButton
+    //       .whenPressed(new TurnDegrees(m_drivetrain, 180));
+    // xboxYButton
+    //       .whenPressed(new TurnDegrees(m_drivetrain, -180));
+
     xboxYButton
-          .whenPressed(new TurnDegrees(m_drivetrain, -180));
+          .whenPressed(new DriveFeet(m_drivetrain, 5)
+          .andThen(new TurnDegrees(m_drivetrain, 180))
+          .andThen(new DriveFeet(m_drivetrain, 5))
+          .andThen(new TurnDegrees(m_drivetrain, 180)));
   } 
 
 
