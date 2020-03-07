@@ -34,7 +34,15 @@ public final class Constants {
     public final static int kPigeonUnitsPerRotation = 8192;
     
 	// Motor neutral dead-band, set to the minimum 0.1%.
-	public final static double kNeutralDeadband = 0.001;
+    public final static double kNeutralDeadband = 0.001;
+    
+    public final static double kLowGearMotorRotationsPerWheelRotation = 20.8333;
+    public final static double kInchesPerFoot = 12.0;
+    public final static double kRotationsPerInch = 1 / (2 * Math.PI * 3);
+    public final static double kSensorUnitsPerFoot = Constants.kInchesPerFoot
+        * Constants.kRotationsPerInch
+        * Constants.kLowGearMotorRotationsPerWheelRotation
+        * Constants.kSensorUnitsPerRotation;
 	
 	/**
 	 * PID Gains may have to be adjusted based on the responsiveness of control loop.
@@ -60,7 +68,7 @@ public final class Constants {
     // Setpoint for the shooter
     public static final int acceleratorSetpoint = 4200;
     // 8600 for initiation line
-    public static final int flywheelSetpoint = 13000;
+    public static final int flywheelSetpoint = 7000;
 
     // Drivetrain w/ CTRE Falcon 500s/TalonFXs
     public static final int driveLeftLeaderFalconID = 4;
@@ -70,6 +78,9 @@ public final class Constants {
     // Shifter
     public static final int shifterSolenoidForward = 4;
     public static final int shifterSolenoidReverse = 5;
+    // Direction
+    public static final double drivetrainForward = -1;
+    public static final double drivetrainBackward = 1;
 
     // Pigeon
     public static final int pigeonCanID = 12;
@@ -99,7 +110,7 @@ public final class Constants {
     public static final int serializerFollowerSparkMaxId = 5;
     @Config
     public static double frontSerializerSpeed = 0.4;
-    public static double backSerializerSpeed = 0.1;
+    public static double backSerializerSpeed = 0.2;
 
     public static final double kJoystickTurnDeadzone = 0.15;
 
