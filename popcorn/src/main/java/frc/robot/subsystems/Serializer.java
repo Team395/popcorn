@@ -29,6 +29,7 @@ public class Serializer extends SubsystemBase {
 
         serializerLeader.setInverted(false);
         serializerFollower.setInverted(true);
+        serializerFollower.setOpenLoopRampRate(0.25);
         //serializerFollower.follow(serializerLeader);
     }
 
