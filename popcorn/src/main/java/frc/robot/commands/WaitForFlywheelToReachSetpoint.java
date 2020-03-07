@@ -9,7 +9,7 @@ import io.github.oblarg.oblog.annotations.Log;
 
 public class WaitForFlywheelToReachSetpoint extends CommandBase implements Loggable {
     private Shooter m_shooter;
-    private int kErrThreshold = 10; // how many sensor units until its close-enough
+    private int kErrThreshold = 100; // how many sensor units until its close-enough
     private int kLoopsToSettle = 10; // how many loops sensor must be close-enough
     @Log
     private int _withinThresholdLoops = 0;
@@ -34,8 +34,8 @@ public class WaitForFlywheelToReachSetpoint extends CommandBase implements Logga
     public void execute() {
         /* Check if closed loop error is within the threshld */
         int flywheelClosedLoopError = m_shooter.getFlywheelClosedLoopError();
-        if (flywheelClosedLoopError < +m_robotContainer.flywheelErrorThreshold &&
-            flywheelClosedLoopError > -m_robotContainer.flywheelErrorThreshold) {
+        if (flywheelClosedLoopError < +kErrThreshold &&
+            flywheelClosedLoopError > -kErrThreshold) {
 
             ++_withinThresholdLoops;
         } else {
@@ -54,7 +54,7 @@ public class WaitForFlywheelToReachSetpoint extends CommandBase implements Logga
 
     @Override
     public boolean isFinished() {
-        return (_withinThresholdLoops > m_robotContainer.flywheelLoopsToSettle);
+        return (_withinThresholdLoops > kLoopsToSettle);
     }
     
 }
