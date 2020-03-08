@@ -23,8 +23,8 @@ public class StowIntake extends CommandBase {
       // Called when the command is initially scheduled.
       @Override
       public void initialize() {
-          intake.moveIntake(IntakePositions.UP);
-          intake.set(0);
+          // intake.moveIntake(IntakePositions.UP);
+          // intake.set(0);
           timer.start();
           timerStartTime = timer.get();
       }

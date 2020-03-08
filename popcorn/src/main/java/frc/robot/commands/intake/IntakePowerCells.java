@@ -36,7 +36,7 @@ public class IntakePowerCells extends CommandBase {
       // Called when the command is initially scheduled.
       @Override
       public void initialize() {
-          intake.moveIntake(IntakePositions.DOWN);
+          // intake.moveIntake(IntakePositions.DOWN);
       }
     
       // Called every time the scheduler runs while the command is scheduled.
@@ -56,7 +56,7 @@ public class IntakePowerCells extends CommandBase {
           : backSerializerSpeedToSet;
 
 
-        intake.set(intakeSpeed);
+        // intake.set(intakeSpeed);
         serializer.set(frontSerializerSpeed, backSerializerSpeed);
       }
     
