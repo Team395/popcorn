@@ -12,8 +12,11 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import io.github.oblarg.oblog.annotations.Config;
+import io.github.oblarg.oblog.annotations.Log;
 
 public class Climber extends SubsystemBase {
 
@@ -25,7 +28,10 @@ public class Climber extends SubsystemBase {
   public Climber() {
     climberMotor.setIdleMode(IdleMode.kBrake);
     climberEncoder = climberMotor.getEncoder();
-    climberMotor.setInverted(true);
+    climberMotor.setInverted(false);
+    climberEncoder.setPosition(0);
+    double encoderPosition = climberEncoder.getPosition();
+    SmartDashboard.putNumber("Encoder", encoderPosition);
   }
 
   public double getEncoderPosition() {
@@ -37,9 +43,19 @@ public class Climber extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
+  @Log
+  public double m_spin = 0.9;
+  @Config
+  public void setSpin(double value) {
+    m_spin = value;
+  }
 
-public void spin(double speed) {
-  climberMotor.set(speed);
-}
+  public void spin(double speed) {
+    climberMotor.set(speed);
+    // climberMotor.set(m_spin * speed);
+  }
 
+  public void stop() {
+    climberMotor.set(0);
+  }
 }

@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Drivetrain;
 
@@ -22,13 +23,52 @@ public class TankDrive extends CommandBase {
      public void initialize() {
         
      }
+
+     public void GTADrive(double leftTrigger, double rightTrigger, double turn) {
+       // TODO
+        if (-Constants.kJoystickTurnDeadzone <= turn
+            && turn <= Constants.kJoystickTurnDeadzone) {
+            turn = 0.0;
+        }
+
+        turn = Math.abs(turn) < Constants.kJoystickTurnDeadzone
+          ? 0.0
+          : (turn - Math.signum(turn) * Constants.kJoystickTurnDeadzone) / (1.0 - Constants.kJoystickTurnDeadzone);
+    
+        
+        double left = rightTrigger - leftTrigger;
+        double right = rightTrigger - leftTrigger;
+
+        turn = turn * turn * Math.signum(turn);
+    
+        if(left > 0) { turn *= -1.0; }
+
+        left += turn;
+        right -= turn;
+
+        left = Math.min(1.0, Math.max(-1.0, left));
+        right = Math.max(-1.0, Math.min(1.0, right));
+    
+        m_drivetrain.tankDrive(left, right);
+        SmartDashboard.putNumber("left", left);
+        SmartDashboard.putNumber("right", right);
+    }
+
+    public void traditionalTankDrive() {
+      // SmartDashboard.putNumber("leftY", m_robotContainer.getLeftY());
+      // SmartDashboard.putNumber("rightY", m_robotContainer.getRightY());
+      //  m_drivetrain.tankDrive(m_robotContainer.getLeftY()
+      //    , m_robotContainer.getRightY());   
+    }
+  
    
      // Called every time the scheduler runs while the command is scheduled.
      @Override
      public void execute() {
-       SmartDashboard.putNumber("leftY", m_robotContainer.getLeftY());
-       SmartDashboard.putNumber("rightY", m_robotContainer.getRightY());
-        m_drivetrain.tankDrive(m_robotContainer.getLeftY(), m_robotContainer.getRightY());
+      //  traditionalTankDrive();
+      GTADrive(m_robotContainer.getControllerLeftTrigger(),
+               m_robotContainer.getControllerRightTrigger(),
+               m_robotContainer.getControllerTurn());
      }
    
      // Called once the command ends or is interrupted.

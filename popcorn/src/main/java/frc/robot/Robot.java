@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import io.github.oblarg.oblog.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -32,7 +33,11 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-   
+
+    // The first argument is the root container
+    // The second argument is whether logging and config should be given separate tabs
+    Logger.configureLoggingAndConfig(m_robotContainer, false);
+    // Logger.configureLoggingAndConfig(m_robotContainer.m_climber, true);
   }
 
   /**
@@ -53,6 +58,7 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.periodic();
 
+    Logger.updateEntries();
   }
 
   /**
@@ -103,7 +109,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-
+    m_robotContainer.teleopPeriodic();
   }
 
   @Override
