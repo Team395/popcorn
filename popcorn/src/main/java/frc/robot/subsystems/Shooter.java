@@ -100,6 +100,7 @@ public class Shooter extends SubsystemBase implements Loggable {
     configs.slot0.kI = Constants.flywheelI;
     configs.slot0.kD = Constants.flywheelD;
     configs.slot0.kF = Constants.flywheelF;
+    configs.closedloopRamp = 1;
     flywheelFollowerTalonFX.configAllSettings(configs);
     flywheelLeaderTalonFX.configAllSettings(configs);
 
