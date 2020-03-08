@@ -60,9 +60,17 @@ public final class Constants {
         , 0.0
         , 200
         , 1.00 );
+    // TODO:  tune kGains_LimeLight
+    public final static Gains kGains_LimeLight = new Gains( 0.1
+        , 0.0
+        , 0.01
+        , 0.0
+        , 200
+        , 1.00 );
     public final static double kTurnClamp = 1.0;
     public final static double kTurnMinimumSpeed = 0.07;
     public final static double kTurnAcceptableErrorDegrees = 0.5;
+    public final static double kAimToTargetAcceptableErrorDegrees = 0.5;
 
     // Constants for accelerator PID
     public static final double acceleratorP = 0.0001;
