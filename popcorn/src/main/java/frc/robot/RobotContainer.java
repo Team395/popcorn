@@ -76,7 +76,7 @@ public class RobotContainer {
   public final Climber m_climber = new Climber();
   // private final Hanger m_hanger = new Hanger(m_climber, extend);
 
-  private final Shooter m_shooter = new Shooter();
+  private final Shooter m_shooter = new Shooter(this);
 
   private final Intake m_intake = new Intake();
   private final Serializer m_serializer = new Serializer();
@@ -248,13 +248,16 @@ public class RobotContainer {
     // leftJoystickTrigger
     xboxBButton
       .whenHeld(new SequentialCommandGroup(
-        new InstantCommand(() -> m_shooter.setFlywheel(Constants.flywheelSetpoint), m_shooter),
+        new InstantCommand(() -> m_shooter.moveHood(ShooterHoodPositions.DOWN), m_shooter),
+        // new InstantCommand(() -> m_shooter.setFlywheel(Constants.flywheelSetpoint), m_shooter),
+        new InstantCommand(() -> m_shooter.setFlywheelRobotContainer(), m_shooter),
         new WaitForFlywheelToReachSetpoint(m_shooter, this),
         new RunCommand(() -> {
             m_serializer.set(
-              -1, -1);
+              -1.0, -0.8);
 
-            m_shooter.setAccelerator(4200);
+            // m_shooter.setAccelerator(4200);
+            m_shooter.setAcceleratorRobotContainer();
           }
         , m_shooter, m_serializer)))
       .whenReleased(
@@ -299,8 +302,11 @@ public class RobotContainer {
 
     xboxYButton
           .whenPressed(new DriveFeet(m_drivetrain, 5)
+          .andThen(new WaitCommand(0.1))
           .andThen(new TurnDegrees(m_drivetrain, 180))
+          .andThen(new WaitCommand(0.1))
           .andThen(new DriveFeet(m_drivetrain, 5))
+          .andThen(new WaitCommand(0.1))
           .andThen(new TurnDegrees(m_drivetrain, 180)));
   } 
 

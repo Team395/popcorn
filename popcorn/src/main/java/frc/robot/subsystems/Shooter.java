@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.enums.ShooterHoodPositions;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
@@ -45,8 +46,10 @@ public class Shooter extends SubsystemBase implements Loggable {
       , Constants.shooterHoodSolenoidReverse);
 
   public ShooterHoodPositions currentPosition = ShooterHoodPositions.UP;
+  private RobotContainer robotContainer;
 
-  public Shooter() {
+  public Shooter(RobotContainer robotContainer) {
+    this.robotContainer = robotContainer;
     configureAccelerator();
 
     configureFlywheel();
@@ -118,8 +121,18 @@ public class Shooter extends SubsystemBase implements Loggable {
     flywheelLeaderTalonFX.set(ControlMode.Velocity, flywheelSetpoint);
   }
 
+  //for testing
+  public void setFlywheelRobotContainer() {
+    flywheelLeaderTalonFX.set(ControlMode.Velocity, robotContainer.testFlywheelSpeed);
+  }
+
   public void setAccelerator(double acceleratorSetpoint) {
     acceleratorController.setReference(acceleratorSetpoint, ControlType.kVelocity);
+  }
+
+  //for testing
+  public void setAcceleratorRobotContainer() {
+    acceleratorController.setReference(robotContainer.testAcceleratorSpeed, ControlType.kVelocity);
   }
 
   public void moveHood(final ShooterHoodPositions position) {
@@ -166,5 +179,6 @@ public class Shooter extends SubsystemBase implements Loggable {
 
   public void updateSmartDashboard() {
     SmartDashboard.putNumber("flywheelError", getFlywheelClosedLoopError());
+    SmartDashboard.putNumber("flywheelVelocity", flywheelLeaderTalonFX.getSelectedSensorVelocity());
   }
 }
