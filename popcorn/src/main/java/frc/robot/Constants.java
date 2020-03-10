@@ -60,10 +60,12 @@ public final class Constants {
         , 0.0
         , 200
         , 1.00 );
+
     public final static double kTurnClamp = 1.0;
     public final static double kTurnMinimumSpeed = 0.1;//0.07
     public final static double kDriveMinimumSpeed = 0.15;
     public final static double kTurnAcceptableErrorDegrees = 0.5;
+    public final static double kAimToTargetAcceptableErrorDegrees = 0.5;
 
     public final static Gains kGains_Limelight_Turn = new Gains(0.03, 0.0, 0.003, 0.0, 0, 0);
     public final static double kLimelightAcceptableErrorDegrees = 0.5;

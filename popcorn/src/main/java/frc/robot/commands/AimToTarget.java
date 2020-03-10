@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AimToTarget extends PIDCommand {
     private Drivetrain drivetrain;
-  private Limelight limelight;
+    private Limelight limelight;
 
   public AimToTarget(Drivetrain drivetrain, Limelight limelight) {
     super(new PIDController(Constants.kGains_Limelight_Turn.kP
@@ -19,7 +19,6 @@ public class AimToTarget extends PIDCommand {
           , 0
           , output -> drivetrain.arcadeDrive(0, output)
           , drivetrain);
-
     this.drivetrain = drivetrain;
     this.limelight = limelight;
 
@@ -39,7 +38,8 @@ public class AimToTarget extends PIDCommand {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-      drivetrain.tankDrive(0, 0);
+    super.end(interrupted);
+    drivetrain.tankDrive(0, 0);
   }
 
   // Returns true when the command should end.
