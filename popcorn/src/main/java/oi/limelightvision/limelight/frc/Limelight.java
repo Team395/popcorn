@@ -11,7 +11,7 @@ import oi.limelightvision.limelight.frc.ControlMode.*;
 *   Granite City Gearheads. We Hope you Enjoy the Lime Light
 *   Camera. 
 */
-public class LimeLight {
+public class Limelight {
 
     private NetworkTable m_table;
     private String m_tableName;
@@ -39,7 +39,7 @@ public class LimeLight {
     /**
      * Using the Default Lime Light NT table
      */
-    public LimeLight() {
+    public Limelight() {
         m_tableName = "limelight";
         m_table = NetworkTableInstance.getDefault().getTable(m_tableName);
         _hearBeat.startPeriodic(_hearBeatPeriod);
@@ -48,7 +48,7 @@ public class LimeLight {
     /**
      * If you changed the name of your Lime Light tell Me the New Name
      */
-    public LimeLight(String tableName) {
+    public Limelight(String tableName) {
         m_tableName = tableName;
         m_table = NetworkTableInstance.getDefault().getTable(m_tableName);
         _hearBeat.startPeriodic(_hearBeatPeriod);
@@ -57,7 +57,7 @@ public class LimeLight {
     /**
      * Send an instance of the NetworkTabe
      */
-    public LimeLight(NetworkTable table) {
+    public Limelight(NetworkTable table) {
         m_table = table;
         _hearBeat.startPeriodic(_hearBeatPeriod);
        
