@@ -28,8 +28,10 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.AimToTarget;
 import frc.robot.commands.Climb;
 import frc.robot.commands.ClimbToSetpoint;
+import frc.robot.commands.DriveToTarget;
 // import edu.wpi.first.wpilibj.XboxController;
 // import frc.robot.commands.ColorMatch;
 import frc.robot.commands.TankDrive;
@@ -47,6 +49,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shooter;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
+import oi.limelightvision.limelight.frc.Limelight;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Serializer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -80,6 +83,8 @@ public class RobotContainer {
 
   private final Intake m_intake = new Intake();
   private final Serializer m_serializer = new Serializer();
+
+  private final Limelight m_limelight = new Limelight();
 
   // Joystick leftJoystick = new Joystick(3);
   // Joystick rightJoystick = new Joystick(4);
@@ -248,7 +253,7 @@ public class RobotContainer {
     // leftJoystickTrigger
     xboxBButton
       .whenHeld(new SequentialCommandGroup(
-        new InstantCommand(() -> m_shooter.moveHood(ShooterHoodPositions.DOWN), m_shooter),
+        new InstantCommand(() -> m_shooter.moveHood(ShooterHoodPositions.UP), m_shooter),
         // new InstantCommand(() -> m_shooter.setFlywheel(Constants.flywheelSetpoint), m_shooter),
         new InstantCommand(() -> m_shooter.setFlywheelRobotContainer(), m_shooter),
         new WaitForFlywheelToReachSetpoint(m_shooter, this),
@@ -308,6 +313,28 @@ public class RobotContainer {
           .andThen(new DriveFeet(m_drivetrain, 5))
           .andThen(new WaitCommand(0.1))
           .andThen(new TurnDegrees(m_drivetrain, 180)));
+
+    xboxXButton
+          .whenHeld(new AimToTarget(m_drivetrain, m_limelight)
+            .andThen(new DriveToTarget(m_drivetrain, m_limelight)
+            .andThen(new AimToTarget(m_drivetrain, m_limelight)
+            .andThen(new SequentialCommandGroup(
+              new InstantCommand(() -> m_shooter.moveHood(ShooterHoodPositions.UP), m_shooter),
+              new InstantCommand(() -> m_shooter.setFlywheelRobotContainer(), m_shooter),
+              new WaitForFlywheelToReachSetpoint(m_shooter, this),
+              new RunCommand(() -> {
+                  m_serializer.set(
+                    -1.0, -0.8);
+                  m_shooter.setAcceleratorRobotContainer();
+                }
+              , m_shooter, m_serializer))))))
+          .whenReleased(
+            new InstantCommand(() -> {
+                m_serializer.set(0, 0);
+                m_shooter.stopFlywheel();
+                m_shooter.stopAccelerator();
+              }, m_shooter, m_serializer)
+            );
   } 
 
 
