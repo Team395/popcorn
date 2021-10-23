@@ -85,28 +85,24 @@ public class RobotContainer {
   private final Serializer m_serializer = new Serializer();
 
   private final Limelight m_limelight = new Limelight();
-
-
-  // JoystickButton leftJoystickTrigger = new JoystickButton(leftJoystick, 1);
-  // JoystickButton leftJoystickThumbButton = new JoystickButton(leftJoystick, 2);
-  // JoystickButton leftJoystickButtonFour = new JoystickButton(leftJoystick, 4);
-
-  // JoystickButton rightJoystickTrigger = new JoystickButton(rightJoystick, 1);
-  // JoystickButton rightJoystickThumbButton = new JoystickButton(rightJoystick, 2);
-  // JoystickButton rightJoystickButtonFour = new JoystickButton(rightJoystick, 4);
   
   XboxController driverController = new XboxController(0);
-  JoystickButton xboxAButton = new JoystickButton(driverController, 1);
-  JoystickButton xboxBButton = new JoystickButton(driverController, 2);
-  JoystickButton xboxYButton = new JoystickButton(driverController, 4);
-  JoystickButton xboxXButton = new JoystickButton(driverController, 3);
-
+  JoystickButton driverXboxAButton = new JoystickButton(driverController, 1);
+  JoystickButton driverXboxBButton = new JoystickButton(driverController, 2);
+  JoystickButton driverXboxYButton = new JoystickButton(driverController, 4);
+  JoystickButton driverXboxXButton = new JoystickButton(driverController, 3);
+  
   public XboxController operatorController = new XboxController(1); 
+  JoystickButton operatorXboxLButton = new JoystickButton(operatorController, 5);
+  JoystickButton operatorXboxRButton = new JoystickButton(operatorController, 6);
+
 
   static final double joystickDeadzone = 0.15;
   // static final double xboxDeadzone = 0.25;
 
   Boolean driveDistance = false;
+
+  
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
@@ -240,15 +236,15 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-      // xboxAButton.whenPressed(
+      // driverXboxAButton.whenPressed(
       //   new InstantCommand(() -> m_intake.toggleIntakePosition(), m_intake));
-      // xboxBButton.whenPressed(
+      // driverXboxBButton.whenPressed(
       //   new InstantCommand(()-> m_shooter.toggleHoodPosition(), m_shooter));
-      // xboxYButton.whenPressed(
+      // driverXboxYButton.whenPressed(
       //   new InstantCommand(() -> m_drivetrain.toggleGearPosition(), m_drivetrain));
 
     // leftJoystickTrigger
-    xboxBButton
+    driverXboxBButton
       .whenHeld(new SequentialCommandGroup(
         new InstantCommand(() -> m_shooter.moveHood(ShooterHoodPositions.UP), m_shooter),
         // new InstantCommand(() -> m_shooter.setFlywheel(Constants.flywheelSetpoint), m_shooter),
@@ -274,44 +270,45 @@ public class RobotContainer {
         .whenHeld(new RunCommand(() -> m_shooter.set(Constants.acceleratorSetpoint, Constants.flywheelSetpoint), m_shooter))
         .whenReleased(new RunCommand(() -> m_shooter.stop(), m_shooter));
     
-    rightJoystickTrigger
+    operatorXboxRButton
         .whenHeld(new Climb(m_climber, true));
   
-    rightJoystickThumbButton
+    operatorXboxLButton
       .whenHeld(new Climb(m_climber, false));
 
-    rightJoystickButtonFour
-      .whenPressed(new ClimbToSetpoint(m_climber), false);
+    // rightJoystickButtonFour
+    //   .whenPressed(new ClimbToSetpoint(m_climber), false);
     
-    xboxAButton
+    driverXboxAButton
       .whileHeld(new IntakePowerCells(m_intake
         , m_serializer
         , this
         , Constants.intakeSpeed
         , -Constants.frontSerializerSpeed
         , -Constants.backSerializerSpeed));
-    xboxAButton.whenReleased(new StowIntake(m_intake, m_serializer));
+    driverXboxAButton.whenReleased(new StowIntake(m_intake, m_serializer));
 
-    // xboxXButton
+    // driverXboxXButton
     //       .whenPressed(new DriveFeet(m_drivetrain, 5));
-    // xboxYButton
+    // driverXboxYButton
     //       .whenPressed(new DriveFeet(m_drivetrain, -5));
 
-    // xboxXButton
+    // driverXboxXButton
     //       .whenPressed(new TurnDegrees(m_drivetrain, 180));
-    // xboxYButton
+    // driverXboxYButton
     //       .whenPressed(new TurnDegrees(m_drivetrain, -180));
 
-    xboxYButton
-          .whenPressed(new DriveFeet(m_drivetrain, 5)
-          .andThen(new WaitCommand(0.1))
-          .andThen(new TurnDegrees(m_drivetrain, 180))
-          .andThen(new WaitCommand(0.1))
-          .andThen(new DriveFeet(m_drivetrain, 5))
-          .andThen(new WaitCommand(0.1))
-          .andThen(new TurnDegrees(m_drivetrain, 180)));
+    // TEST DRIVE PATTERN (we think)
+    // driverXboxYButton
+    //       .whenPressed(new DriveFeet(m_drivetrain, 5)
+    //       .andThen(new WaitCommand(0.1))
+    //       .andThen(new TurnDegrees(m_drivetrain, 180))
+    //       .andThen(new WaitCommand(0.1))
+    //       .andThen(new DriveFeet(m_drivetrain, 5))
+    //       .andThen(new WaitCommand(0.1))
+    //       .andThen(new TurnDegrees(m_drivetrain, 180)));
 
-    xboxXButton
+    driverXboxXButton
           .whenHeld(new AimToTarget(m_drivetrain, m_limelight)
             .andThen(new DriveToTarget(m_drivetrain, m_limelight)
             .andThen(new AimToTarget(m_drivetrain, m_limelight)

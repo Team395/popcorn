@@ -48,7 +48,9 @@ public class Climb extends CommandBase {
     SmartDashboard.putNumber("Encoder", encoderPosition);
 
     encoderFinalPosition = encoderPosition + 240 * m_multiplier;
+    // make sure position is not below 0
     encoderFinalPosition = Math.max(encoderFinalPosition, 0);
+    // make sure position is not above 240
     encoderFinalPosition = Math.min(encoderFinalPosition, 240);
   }
 
