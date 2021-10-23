@@ -56,7 +56,7 @@ public class IntakePowerCells extends CommandBase {
           : backSerializerSpeedToSet;
 
 
-        // intake.set(intakeSpeed);
+        intake.set(intakeSpeed);
         serializer.set(frontSerializerSpeed, backSerializerSpeed);
       }
     

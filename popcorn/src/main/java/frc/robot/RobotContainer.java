@@ -236,8 +236,8 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-      // driverXboxAButton.whenPressed(
-      //   new InstantCommand(() -> m_intake.toggleIntakePosition(), m_intake));
+      driverXboxAButton.whenPressed(
+        new InstantCommand(() -> m_intake.toggleIntakePosition(), m_intake));
       // driverXboxBButton.whenPressed(
       //   new InstantCommand(()-> m_shooter.toggleHoodPosition(), m_shooter));
       // driverXboxYButton.whenPressed(
@@ -247,15 +247,15 @@ public class RobotContainer {
     driverXboxBButton
       .whenHeld(new SequentialCommandGroup(
         new InstantCommand(() -> m_shooter.moveHood(ShooterHoodPositions.UP), m_shooter),
-        // new InstantCommand(() -> m_shooter.setFlywheel(Constants.flywheelSetpoint), m_shooter),
-        new InstantCommand(() -> m_shooter.setFlywheelRobotContainer(), m_shooter),
+        new InstantCommand(() -> m_shooter.setFlywheel(Constants.flywheelSetpoint), m_shooter),
+        // new InstantCommand(() -> m_shooter.setFlywheelRobotContainer(), m_shooter),
         new WaitForFlywheelToReachSetpoint(m_shooter, this),
         new RunCommand(() -> {
             m_serializer.set(
               -1.0, -0.8);
 
-            // m_shooter.setAccelerator(4200);
-            m_shooter.setAcceleratorRobotContainer();
+            m_shooter.setAccelerator(Constants.acceleratorSetpoint);
+            // m_shooter.setAcceleratorRobotContainer();
           }
         , m_shooter, m_serializer)))
       .whenReleased(
@@ -266,9 +266,10 @@ public class RobotContainer {
           }, m_shooter, m_serializer)
         );
 
-    leftJoystickTrigger
-        .whenHeld(new RunCommand(() -> m_shooter.set(Constants.acceleratorSetpoint, Constants.flywheelSetpoint), m_shooter))
-        .whenReleased(new RunCommand(() -> m_shooter.stop(), m_shooter));
+    // leftJoystickTrigger
+    //     .whenHeld(new RunCommand(() -> m_shooter.set(Constants.acceleratorSetpoint, Constants.flywheelSetpoint), m_shooter))
+    //     .whenReleased(new RunCommand(() -> m_shooter.stop(), m_shooter));
+
     
     operatorXboxRButton
         .whenHeld(new Climb(m_climber, true));
@@ -314,12 +315,12 @@ public class RobotContainer {
             .andThen(new AimToTarget(m_drivetrain, m_limelight)
             .andThen(new SequentialCommandGroup(
               new InstantCommand(() -> m_shooter.moveHood(ShooterHoodPositions.UP), m_shooter),
-              new InstantCommand(() -> m_shooter.setFlywheelRobotContainer(), m_shooter),
+              new InstantCommand(() -> m_shooter.setFlywheel(Constants.flywheelSetpoint), m_shooter),
               new WaitForFlywheelToReachSetpoint(m_shooter, this),
               new RunCommand(() -> {
                   m_serializer.set(
                     -1.0, -0.8);
-                  m_shooter.setAcceleratorRobotContainer();
+                  m_shooter.setAccelerator(Constants.acceleratorSetpoint);
                 }
               , m_shooter, m_serializer))))))
           .whenReleased(
