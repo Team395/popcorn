@@ -86,9 +86,6 @@ public class RobotContainer {
 
   private final Limelight m_limelight = new Limelight();
 
-  // Joystick leftJoystick = new Joystick(3);
-  // Joystick rightJoystick = new Joystick(4);
-
 
   // JoystickButton leftJoystickTrigger = new JoystickButton(leftJoystick, 1);
   // JoystickButton leftJoystickThumbButton = new JoystickButton(leftJoystick, 2);
@@ -273,18 +270,18 @@ public class RobotContainer {
           }, m_shooter, m_serializer)
         );
 
-    // leftJoystickTrigger
-    //     .whenHeld(new RunCommand(() -> m_shooter.set(Constants.acceleratorSetpoint, Constants.flywheelSetpoint), m_shooter))
-    //     .whenReleased(new RunCommand(() -> m_shooter.stop(), m_shooter));
+    leftJoystickTrigger
+        .whenHeld(new RunCommand(() -> m_shooter.set(Constants.acceleratorSetpoint, Constants.flywheelSetpoint), m_shooter))
+        .whenReleased(new RunCommand(() -> m_shooter.stop(), m_shooter));
     
-    // rightJoystickTrigger
-    //     .whenHeld(new Climb(m_climber, true));
+    rightJoystickTrigger
+        .whenHeld(new Climb(m_climber, true));
   
-    // rightJoystickThumbButton
-    //   .whenHeld(new Climb(m_climber, false));
+    rightJoystickThumbButton
+      .whenHeld(new Climb(m_climber, false));
 
-    // rightJoystickButtonFour
-    //   .whenPressed(new ClimbToSetpoint(m_climber), false);
+    rightJoystickButtonFour
+      .whenPressed(new ClimbToSetpoint(m_climber), false);
     
     xboxAButton
       .whileHeld(new IntakePowerCells(m_intake
