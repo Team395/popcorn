@@ -77,15 +77,15 @@ public final class Constants {
     public static final double acceleratorF = 0.00017;
   
     // Constants for flywheel PID
-    public static final double flywheelP = 0.35;
+    public static final double flywheelP = 0.38;
     public static final double flywheelI = 0;
     public static final double flywheelD = 14.5;
-    public static final double flywheelF = 0.046;
+    public static final double flywheelF = 0.049;
 
     // Setpoint for the shooter
     public static final int acceleratorSetpoint = 4200;
     // 8600 for initiation line
-    public static final int flywheelSetpoint = 7000;
+    public static final int flywheelSetpoint = 15000;
 
     // Drivetrain w/ CTRE Falcon 500s/TalonFXs
     public static final int driveLeftLeaderFalconID = 4;

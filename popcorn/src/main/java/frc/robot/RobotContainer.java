@@ -246,7 +246,7 @@ public class RobotContainer {
     // leftJoystickTrigger
     driverXboxBButton
       .whenHeld(new SequentialCommandGroup(
-        new InstantCommand(() -> m_shooter.moveHood(ShooterHoodPositions.UP), m_shooter),
+        new InstantCommand(() -> m_shooter.moveHood(ShooterHoodPositions.DOWN), m_shooter),
         new InstantCommand(() -> m_shooter.setFlywheel(Constants.flywheelSetpoint), m_shooter),
         // new InstantCommand(() -> m_shooter.setFlywheelRobotContainer(), m_shooter),
         new WaitForFlywheelToReachSetpoint(m_shooter, this),
