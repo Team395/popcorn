@@ -41,7 +41,7 @@ public class TankDrive extends CommandBase {
 
         turn = turn * turn * Math.signum(turn);
     
-        if(left > 0) { turn *= -1.0; }
+        // if(left > 0) { turn *= -1.0; }
 
         left += turn;
         right -= turn;
