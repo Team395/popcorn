@@ -81,6 +81,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         if(sign > 0) { speed = Math.max(Constants.kDriveMinimumSpeed, speed); }
         else if(sign < 0) { speed = Math.min(-1 * Constants.kDriveMinimumSpeed, speed); }
 
+        if (sign < 0) { turn = -1 * turn; }
+
         SmartDashboard.putNumber("massagedTurn", turn);
 
         leftLeader.set(ControlMode.PercentOutput, speed + turn);
