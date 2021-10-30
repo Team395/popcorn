@@ -89,7 +89,7 @@ public final class Constants {
     public static final int batterShotFlywheelSetpoint = 8600;
 
     // Setpoint for auto shot distance
-    public static final int autoShotVerticalDistance = 3;
+    public static final int autoShotVerticalAngle = 15;
 
 
     // Drivetrain w/ CTRE Falcon 500s/TalonFXs
