@@ -80,12 +80,17 @@ public final class Constants {
     public static final double flywheelP = 0.38;
     public static final double flywheelI = 0;
     public static final double flywheelD = 14.5;
-    public static final double flywheelF = 0.049;
+    public static final double flywheelF = 0.052;
 
     // Setpoint for the shooter
     public static final int acceleratorSetpoint = 4200;
-    // 8600 for initiation line
-    public static final int flywheelSetpoint = 15000;
+    public static final int flywheelSetpoint = 17000;
+    public static final int autoShotFlywheelSetpoint = 17000;
+    public static final int batterShotFlywheelSetpoint = 8600;
+
+    // Setpoint for auto shot distance
+    public static final int autoShotVerticalDistance = 3;
+
 
     // Drivetrain w/ CTRE Falcon 500s/TalonFXs
     public static final int driveLeftLeaderFalconID = 4;
@@ -128,6 +133,10 @@ public final class Constants {
     @Config
     public static double frontSerializerSpeed = 0.4;
     public static double backSerializerSpeed = 0.2;
+
+    public static final double batterShotSerializeFrontSpeed = 0.8;
+    public static final double batterShotSerializeBackSpeed = 0.64;
+
 
     public static final double kJoystickTurnDeadzone = 0.15;
 

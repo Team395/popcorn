@@ -243,7 +243,7 @@ public class RobotContainer {
       // driverXboxYButton.whenPressed(
       //   new InstantCommand(() -> m_drivetrain.toggleGearPosition(), m_drivetrain));
 
-    // leftJoystickTrigger
+    // BATTER SHOT (B BUTTON)
     driverXboxBButton
       .whenHeld(new SequentialCommandGroup(
         new InstantCommand(() -> m_shooter.moveHood(ShooterHoodPositions.DOWN), m_shooter),
@@ -252,7 +252,9 @@ public class RobotContainer {
         new WaitForFlywheelToReachSetpoint(m_shooter, this),
         new RunCommand(() -> {
             m_serializer.set(
-              -1.0, -0.8);
+              -Constants.batterShotSerializeFrontSpeed, 
+              -Constants.batterShotSerializeBackSpeed
+            );
 
             m_shooter.setAccelerator(Constants.acceleratorSetpoint);
             // m_shooter.setAcceleratorRobotContainer();
@@ -309,6 +311,7 @@ public class RobotContainer {
     //       .andThen(new WaitCommand(0.1))
     //       .andThen(new TurnDegrees(m_drivetrain, 180)));
 
+    // AUTO SHOT
     driverXboxXButton
           .whenHeld(new AimToTarget(m_drivetrain, m_limelight)
             .andThen(new DriveToTarget(m_drivetrain, m_limelight)
