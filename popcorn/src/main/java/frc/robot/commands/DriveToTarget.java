@@ -16,7 +16,7 @@ public class DriveToTarget extends PIDCommand {
             , Constants.kGains_Limelight_Turn.kI
             , Constants.kGains_Limelight_Turn.kD)
           , limelight::getdegVerticalToTarget
-          , -Constants.autoShotVerticalDistance
+          , -Constants.autoShotVerticalAngle
           , output -> drivetrain.arcadeDrive(-output, 0)
           , drivetrain);
 

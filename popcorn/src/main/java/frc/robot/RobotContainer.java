@@ -236,8 +236,6 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-      driverXboxAButton.whenPressed(
-        new InstantCommand(() -> m_intake.toggleIntakePosition(), m_intake));
       // driverXboxBButton.whenPressed(
       //   new InstantCommand(()-> m_shooter.toggleHoodPosition(), m_shooter));
       // driverXboxYButton.whenPressed(
@@ -282,6 +280,8 @@ public class RobotContainer {
     // rightJoystickButtonFour
     //   .whenPressed(new ClimbToSetpoint(m_climber), false);
     
+    driverXboxAButton.whenPressed(
+        new InstantCommand(() -> m_intake.toggleIntakePosition(), m_intake));
     driverXboxAButton
       .whileHeld(new IntakePowerCells(m_intake
         , m_serializer
