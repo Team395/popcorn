@@ -60,6 +60,8 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj.Servo;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -85,6 +87,8 @@ public class RobotContainer {
   private final Serializer m_serializer = new Serializer();
 
   private final Limelight m_limelight = new Limelight();
+
+  private final Command m_autonomousCommand = getAutonomousCommand();
   
   XboxController driverController = new XboxController(0);
   JoystickButton driverXboxAButton = new JoystickButton(driverController, 1);
@@ -95,6 +99,10 @@ public class RobotContainer {
   public XboxController operatorController = new XboxController(1); 
   JoystickButton operatorXboxLButton = new JoystickButton(operatorController, 5);
   JoystickButton operatorXboxRButton = new JoystickButton(operatorController, 6);
+  JoystickButton operatorXboxYButton = new JoystickButton(operatorController, 4);
+
+
+  Servo climberPaul = new Servo(0);
 
 
   static final double joystickDeadzone = 0.15;
@@ -159,6 +167,23 @@ public class RobotContainer {
     m_drivetrain.shiftGear(DrivetrainShifterGears.LOW);
 
     CameraServer.getInstance().startAutomaticCapture();
+  }
+
+  public void autonomousInit() {
+    m_intake.moveIntake(IntakePositions.UP);
+    m_shooter.moveHood(ShooterHoodPositions.UP);
+    m_drivetrain.shiftGear(DrivetrainShifterGears.LOW);
+
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.schedule();
+    }
+
+    // new InstantCommand(() -> new DriveFeet(m_drivetrain, 5), m_drivetrain);
+    // new DriveFeet(m_drivetrain, 5); 
+  }
+
+  public void autonomousPeriodic() {
+    CommandScheduler.getInstance().run();
   }
 
   public double getControllerLeftTrigger() {
@@ -245,7 +270,7 @@ public class RobotContainer {
     driverXboxBButton
       .whenHeld(new SequentialCommandGroup(
         new InstantCommand(() -> m_shooter.moveHood(ShooterHoodPositions.DOWN), m_shooter),
-        new InstantCommand(() -> m_shooter.setFlywheel(Constants.flywheelSetpoint), m_shooter),
+        new InstantCommand(() -> m_shooter.setFlywheel(Constants.batterShotFlywheelSetpoint), m_shooter),
         // new InstantCommand(() -> m_shooter.setFlywheelRobotContainer(), m_shooter),
         new WaitForFlywheelToReachSetpoint(m_shooter, this),
         new RunCommand(() -> {
@@ -277,6 +302,9 @@ public class RobotContainer {
     operatorXboxLButton
       .whenHeld(new Climb(m_climber, false));
 
+    operatorXboxYButton
+      .whenPressed(new InstantCommand(() -> climberPaul.setAngle(90), m_climber));
+
     // rightJoystickButtonFour
     //   .whenPressed(new ClimbToSetpoint(m_climber), false);
     
@@ -293,7 +321,7 @@ public class RobotContainer {
 
     // driverXboxXButton
     //       .whenPressed(new DriveFeet(m_drivetrain, 5));
-    // driverXboxYButton
+    // driverXboxYButtonDriveFee
     //       .whenPressed(new DriveFeet(m_drivetrain, -5));
 
     // driverXboxXButton
@@ -342,15 +370,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    // return m_colorMatch;
-    return new Command(){
-    
-      @Override
-      public Set<Subsystem> getRequirements() {
-        // TODO Auto-generated method stub
-        return null;
-      }
-    };
+    return new DriveFeet(m_drivetrain, 5);
   }
 }
+  

@@ -25,7 +25,6 @@ public class TankDrive extends CommandBase {
      }
 
      public void GTADrive(double leftTrigger, double rightTrigger, double turn) {
-       // TODO
         if (-Constants.kJoystickTurnDeadzone <= turn
             && turn <= Constants.kJoystickTurnDeadzone) {
             turn = 0.0;
@@ -39,6 +38,10 @@ public class TankDrive extends CommandBase {
         double left = rightTrigger - leftTrigger;
         double right = rightTrigger - leftTrigger;
 
+        // left = left * left * Math.signum(left);
+        // right = right * right * Math.signum(right);
+
+        // turn smoothing
         turn = turn * turn * Math.signum(turn);
     
         // if(left > 0) { turn *= -1.0; }
@@ -48,6 +51,9 @@ public class TankDrive extends CommandBase {
 
         left = Math.min(1.0, Math.max(-1.0, left));
         right = Math.max(-1.0, Math.min(1.0, right));
+
+        left = left * 2/3;
+        right = right * 2/3;
     
         m_drivetrain.tankDrive(left, right);
         SmartDashboard.putNumber("left", left);
